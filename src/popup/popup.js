@@ -625,6 +625,90 @@
     `).join('');
     }
 
+    // ── Samples Panel ──
+    const samplesBtn = document.getElementById('samplesBtn');
+    const samplesPanel = document.getElementById('samplesPanel');
+    const samplesOverlay = document.getElementById('samplesOverlay');
+    const closeSamples = document.getElementById('closeSamples');
+    const samplesCategoryTabs = document.getElementById('samplesCategoryTabs');
+    const samplesList = document.getElementById('samplesList');
+    let activeSampleCategory = null;
+
+    samplesBtn.addEventListener('click', () => {
+        openSamplesPanel();
+        Analytics.track('samples_opened');
+    });
+
+    function openSamplesPanel() {
+        if (typeof RegexSamples === 'undefined') return;
+        const categories = RegexSamples.getCategories();
+        if (!activeSampleCategory) activeSampleCategory = categories[0];
+
+        // Render category tabs
+        samplesCategoryTabs.innerHTML = categories.map(cat =>
+            `<button class="samples-cat-btn${cat === activeSampleCategory ? ' active' : ''}" data-cat="${escapeHtml(cat)}">${escapeHtml(cat)}</button>`
+        ).join('');
+
+        renderSamples(activeSampleCategory);
+        samplesPanel.hidden = false;
+        samplesOverlay.hidden = false;
+    }
+
+    function closeSamplesPanel() {
+        samplesPanel.hidden = true;
+        samplesOverlay.hidden = true;
+    }
+
+    function renderSamples(category) {
+        const items = RegexSamples.getByCategory(category);
+        samplesList.innerHTML = items.map((s, i) =>
+            `<div class="sample-card" data-cat="${escapeHtml(s.category)}" data-idx="${i}">
+                <div class="sample-card-name">${escapeHtml(s.name)}</div>
+                <div class="sample-card-desc">${escapeHtml(s.description)}</div>
+                <div class="sample-card-pattern">/${escapeHtml(s.pattern)}/${s.flags}</div>
+            </div>`
+        ).join('');
+    }
+
+    samplesCategoryTabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.samples-cat-btn');
+        if (!btn) return;
+        activeSampleCategory = btn.dataset.cat;
+        samplesCategoryTabs.querySelectorAll('.samples-cat-btn').forEach(b =>
+            b.classList.toggle('active', b.dataset.cat === activeSampleCategory)
+        );
+        renderSamples(activeSampleCategory);
+    });
+
+    samplesList.addEventListener('click', (e) => {
+        const card = e.target.closest('.sample-card');
+        if (!card) return;
+        const cat = card.dataset.cat;
+        const idx = parseInt(card.dataset.idx, 10);
+        const items = RegexSamples.getByCategory(cat);
+        const sample = items[idx];
+        if (!sample) return;
+
+        // Load sample into the main UI
+        patternInput.value = sample.pattern;
+        activeFlags = new Set(sample.flags.split(''));
+        updateFlagButtons();
+        testString.value = sample.testString;
+
+        // If it's a Replace sample, open the replace section
+        if (sample.category === 'Replace') {
+            replaceBody.hidden = false;
+            replaceToggle.classList.add('open');
+        }
+
+        runEngine();
+        closeSamplesPanel();
+        Analytics.track('sample_loaded', { name: sample.name });
+    });
+
+    closeSamples.addEventListener('click', closeSamplesPanel);
+    samplesOverlay.addEventListener('click', closeSamplesPanel);
+
     // ── Helpers ──
     function escapeHtml(str) {
         if (typeof str !== 'string') return '';

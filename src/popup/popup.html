@@ -86,9 +86,21 @@
         <button class="btn btn-primary" id="aiGenerateBtn">
             🤖 AI Generate <span class="pro-pill" id="aiCounter">3/3</span>
         </button>
+        <button class="btn btn-secondary" id="samplesBtn">📖 Examples</button>
         <button class="btn btn-secondary" id="savePatternBtn">💾 Save</button>
         <button class="btn btn-secondary" id="copyBtn">📋 Copy</button>
     </section>
+
+    <!-- Samples Panel (slide-over) -->
+    <div class="panel-overlay" id="samplesOverlay" hidden></div>
+    <aside class="samples-panel" id="samplesPanel" hidden>
+        <div class="panel-header">
+            <h3>📖 Regex Examples</h3>
+            <button class="btn-icon" id="closeSamples">✕</button>
+        </div>
+        <div class="samples-categories" id="samplesCategoryTabs"></div>
+        <div class="panel-body" id="samplesList"></div>
+    </aside>
 
     <!-- History Panel (slide-over) -->
     <div class="panel-overlay" id="historyOverlay" hidden></div>
@@ -175,6 +187,7 @@
     <script src="../shared/performance.js"></script>
     <script src="../shared/security.js"></script>
     <script src="../shared/upgrade-prompts.js"></script>
+    <script src="../shared/samples.js"></script>
     <script src="popup.js"></script>
 </body>
 
