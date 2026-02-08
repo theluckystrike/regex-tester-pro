@@ -1,0 +1,18 @@
+DATA USAGE DECLARATION
+
+Data types collected: NONE
+
+[ ] Personally identifiable information - NOT COLLECTED
+[ ] Health information - NOT COLLECTED
+[ ] Financial and payment information - NOT COLLECTED
+[ ] Authentication information - NOT COLLECTED
+[ ] Personal communications - NOT COLLECTED
+[ ] Location - NOT COLLECTED
+[ ] Web history - NOT COLLECTED
+[ ] User activity - NOT COLLECTED
+[ ] Website content - NOT COLLECTED
+
+CERTIFICATIONS (Check all three):
+[x] This extension does not sell user data to third parties, outside of the approved use cases
+[x] This extension does not use or transfer user data for purposes unrelated to the item's core functionality
+[x] This extension does not use or transfer user data to determine creditworthiness or for lending purposes

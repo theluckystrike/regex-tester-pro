@@ -1,0 +1,11 @@
+This extension does not use remote code.
+
+All JavaScript code is bundled within the extension package and reviewed during Chrome Web Store submission. The extension does not:
+• Load external scripts
+• Use eval() or dynamic code execution
+• Fetch code from external servers
+• Execute any remotely-hosted JavaScript
+
+The only external network request the extension makes is to the Zovo license verification API (https://zovo.one) for Pro license validation. This request contains only the license key and extension ID — no user data.
+
+The complete source code can be audited at: https://github.com/theluckystrike/regex-tester-pro

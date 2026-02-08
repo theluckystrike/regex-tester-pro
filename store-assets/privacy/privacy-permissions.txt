@@ -1,0 +1,88 @@
+STORAGE
+
+Justification:
+This permission is required to save user preferences, pattern history, and application state locally on the device.
+
+Specifically, Regex Tester Pro uses this permission to:
+1. Store saved regex patterns and their test strings for quick recall
+2. Persist user settings (theme preference, default flags, auto-save toggle)
+3. Track daily AI generation usage count (resets daily, local only)
+
+What we DO with this permission:
+• Save and retrieve user settings and pattern history
+• Cache license validation status to minimize API calls
+
+What we DO NOT do:
+• Store any personally identifiable information
+• Sync data to external servers
+• Share stored data with third parties
+
+User control:
+• Users can clear all data through Chrome extension settings
+• Users can use the "Clear All" button in the history panel
+• All data is deleted automatically on extension uninstall
+
+---
+
+ACTIVETAB
+
+Justification:
+This permission is required to enable the right-click context menu feature that lets users test regex on selected text from any webpage.
+
+Specifically, Regex Tester Pro uses this permission to:
+1. Read the text selection when user right-clicks and selects "Test regex on selection"
+2. Pass the selected text to the popup for regex testing
+
+What we DO with this permission:
+• Read selected text only when user explicitly triggers the context menu
+
+What we DO NOT do:
+• Access page content in the background
+• Read or modify any webpage without user action
+• Monitor browsing activity
+
+User control:
+• The feature only activates when user explicitly right-clicks and selects the menu item
+
+---
+
+CONTEXTMENUS
+
+Justification:
+This permission is required to add a "Test regex on selection" option to the right-click context menu.
+
+Specifically, Regex Tester Pro uses this permission to:
+1. Create a single context menu entry for quick regex testing
+2. Enable workflow where users select text on a page and test it against patterns
+
+What we DO with this permission:
+• Add one right-click menu option that appears when text is selected
+
+What we DO NOT do:
+• Add excessive menu items
+• Modify existing browser menu options
+
+User control:
+• Users can disable the extension to remove the context menu entry
+
+---
+
+ALARMS
+
+Justification:
+This permission is required to schedule a daily license validation check for Pro users.
+
+Specifically, Regex Tester Pro uses this permission to:
+1. Refresh Pro license status every 24 hours
+2. Reset the daily AI generation counter at midnight
+
+What we DO with this permission:
+• Schedule two daily alarms (license refresh and AI quota reset)
+
+What we DO NOT do:
+• Send notifications or alerts to the user
+• Run frequent background processes
+• Track user activity
+
+User control:
+• Alarms only perform internal housekeeping — no user-visible effects

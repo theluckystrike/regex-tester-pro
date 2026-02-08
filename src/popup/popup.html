@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=420">
+    <title>Regex Tester Pro</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-brand">
+            <img src="../../assets/icons/icon-48.png" alt="" class="header-logo" width="20" height="20">
+            <span class="header-title">Regex Tester Pro</span>
+            <span class="pro-badge" id="proBadge" hidden>⭐ Pro</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-icon" id="themeToggle" title="Toggle theme">🌓</button>
+            <button class="btn-icon" id="settingsBtn" title="Settings">⚙️</button>
+        </div>
+    </header>
+
+    <!-- Regex Input -->
+    <section class="section">
+        <div class="regex-input-row">
+            <span class="regex-delimiter">/</span>
+            <input type="text" id="patternInput" class="pattern-input" placeholder="Enter regex pattern..."
+                autocomplete="off" spellcheck="false">
+            <span class="regex-delimiter">/</span>
+            <div class="flags-row" id="flagsRow">
+                <button class="flag-btn active" data-flag="g" title="Global">g</button>
+                <button class="flag-btn" data-flag="i" title="Case insensitive">i</button>
+                <button class="flag-btn" data-flag="m" title="Multiline">m</button>
+                <button class="flag-btn" data-flag="s" title="Dotall">s</button>
+                <button class="flag-btn" data-flag="u" title="Unicode">u</button>
+                <button class="flag-btn" data-flag="y" title="Sticky">y</button>
+            </div>
+        </div>
+        <div class="error-line" id="errorLine" hidden></div>
+    </section>
+
+    <!-- Test String -->
+    <section class="section">
+        <label class="section-label">Test String</label>
+        <div class="test-string-wrap" id="testStringWrap">
+            <div class="highlighted-layer" id="highlightedLayer"></div>
+            <textarea id="testString" class="test-string" rows="5" placeholder="Enter test string..."
+                spellcheck="false"></textarea>
+        </div>
+    </section>
+
+    <!-- Match Results -->
+    <section class="section" id="matchSection">
+        <div class="section-label-row">
+            <label class="section-label">Matches</label>
+            <span class="match-count" id="matchCount">0 found</span>
+        </div>
+        <div class="match-results" id="matchResults">
+            <div class="empty-state">Enter a pattern and test string to see matches</div>
+        </div>
+    </section>
+
+    <!-- Capture Groups -->
+    <section class="section" id="groupSection" hidden>
+        <label class="section-label">Capture Groups</label>
+        <div class="group-results" id="groupResults"></div>
+    </section>
+
+    <!-- Find & Replace -->
+    <section class="section collapse" id="replaceSection">
+        <button class="section-toggle" id="replaceToggle">
+            <span>Find &amp; Replace</span>
+            <span class="toggle-arrow">▸</span>
+        </button>
+        <div class="collapse-body" id="replaceBody" hidden>
+            <input type="text" id="replaceInput" class="replace-input" placeholder="Replacement string..."
+                spellcheck="false">
+            <div class="replace-result" id="replaceResult"></div>
+        </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="actions">
+        <button class="btn btn-primary" id="aiGenerateBtn">
+            🤖 AI Generate <span class="pro-pill" id="aiCounter">3/3</span>
+        </button>
+        <button class="btn btn-secondary" id="savePatternBtn">💾 Save</button>
+        <button class="btn btn-secondary" id="copyBtn">📋 Copy</button>
+    </section>
+
+    <!-- History Panel (slide-over) -->
+    <div class="panel-overlay" id="historyOverlay" hidden></div>
+    <aside class="history-panel" id="historyPanel" hidden>
+        <div class="panel-header">
+            <h3>Pattern History</h3>
+            <button class="btn-icon" id="closeHistory">✕</button>
+        </div>
+        <div class="panel-body" id="historyList"></div>
+        <div class="panel-footer">
+            <span id="historyCount">0/10</span>
+            <button class="btn btn-ghost" id="clearHistoryBtn">Clear All</button>
+        </div>
+    </aside>
+
+    <!-- Settings Panel -->
+    <div class="panel-overlay" id="settingsOverlay" hidden></div>
+    <aside class="settings-panel" id="settingsPanel" hidden>
+        <div class="panel-header">
+            <h3>Settings</h3>
+            <button class="btn-icon" id="closeSettings">✕</button>
+        </div>
+        <div class="panel-body">
+            <div class="setting-row">
+                <span>Theme</span>
+                <select id="themeSetting">
+                    <option value="system">System</option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <span>Auto-save patterns</span>
+                <input type="checkbox" id="autoSaveSetting" checked>
+            </div>
+            <div class="setting-row">
+                <span>Default flags</span>
+                <input type="text" id="defaultFlagsSetting" value="g" class="small-input">
+            </div>
+            <hr>
+            <div class="setting-row">
+                <span>License Key</span>
+                <input type="text" id="licenseKeyInput" placeholder="Enter Pro key..." class="small-input">
+            </div>
+            <button class="btn btn-primary btn-sm" id="validateLicenseBtn">Validate</button>
+        </div>
+        <div class="panel-footer">
+            <a href="https://zovo.one?ref=regex-tester-pro" target="_blank" class="zovo-link">Zovo</a>
+            <span class="version-text" id="versionText">v1.0.0</span>
+        </div>
+    </aside>
+
+    <!-- Paywall Modal -->
+    <div class="modal-overlay" id="paywallOverlay" hidden>
+        <div class="modal" id="paywallModal">
+            <div class="modal-icon" id="paywallIcon">🤖</div>
+            <h3 class="modal-title" id="paywallTitle">AI Generations Used Up</h3>
+            <p class="modal-body" id="paywallBody">Unlock unlimited AI-powered regex generation with Pro.</p>
+            <button class="btn btn-primary btn-block" id="paywallCta">Upgrade to Pro — $4.99/mo</button>
+            <button class="btn btn-ghost btn-block" id="paywallDismiss">Maybe later</button>
+        </div>
+    </div>
+
+    <!-- More from Zovo (Cross-Promotion) -->
+    <section class="section promo-section" id="promoSection">
+        <label class="section-label">More from Zovo</label>
+        <div class="promo-list" id="promoList"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-left">
+            <span id="usageFooter">History: 0/10 · AI: 3/3 today</span>
+        </div>
+        <a href="https://zovo.one?ref=regex-tester-pro&source=footer" target="_blank" class="zovo-footer">Zovo</a>
+    </footer>
+
+    <script src="../shared/error-handler.js"></script>
+    <script src="../shared/storage.js"></script>
+    <script src="../shared/payments.js"></script>
+    <script src="../shared/analytics.js"></script>
+    <script src="../shared/feature-config.js"></script>
+    <script src="../shared/catalog.js"></script>
+    <script src="../shared/performance.js"></script>
+    <script src="../shared/security.js"></script>
+    <script src="../shared/upgrade-prompts.js"></script>
+    <script src="popup.js"></script>
+</body>
+
+</html>

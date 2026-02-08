@@ -1,0 +1,82 @@
+Tired of switching between regex101 and your editor?
+
+Regex Tester Pro puts a powerful regex engine right in your browser toolbar — test, debug, and master regular expressions without leaving Chrome.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHY REGEX TESTER PRO?
+
+Unlike web-based regex tools, Regex Tester Pro:
+• Lives in your toolbar — one click to open, test, and go
+• Works completely offline — no server, no latency
+• Saves your pattern history locally for instant recall
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FEATURES
+
+✦ Real-Time Match Highlighting
+   See matches light up as you type. No submit button, no delay — just instant visual feedback on every keystroke.
+
+✦ Capture Group Viewer
+   Named and numbered groups displayed clearly. Debug complex patterns with full group extraction.
+
+✦ AI Regex Generation
+   Describe what you want to match in plain English. Get a working regex instantly. Free tier includes 3 generations per day.
+
+✦ Find & Replace
+   Test replacements with regex backreferences. See the transformed output before you commit to your code.
+
+✦ One-Click Flag Toggles
+   Toggle g, i, m, s, u, y flags with a single click. No more typing flag strings.
+
+✦ Pattern History
+   Save and recall your regex patterns. Never retype that complex email validation again.
+
+✦ Right-Click Testing
+   Select text on any page, right-click, and test regex on it instantly via context menu.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PERFECT FOR
+
+→ Web developers debugging form validation
+→ Data engineers cleaning up text patterns
+→ QA engineers writing test assertions
+→ Students learning regular expressions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HOW IT WORKS
+
+1. Click the Regex Tester Pro icon in your toolbar
+2. Type your pattern and test string
+3. See matches highlighted in real-time
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PRIVACY & TRUST
+
+✓ No data collection
+✓ No tracking or analytics
+✓ Works 100% offline
+✓ Open source: github.com/theluckystrike/regex-tester-pro
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PERMISSIONS EXPLAINED
+
+Storage: Saves your settings and pattern history locally on your device
+Active Tab: Enables the right-click context menu to test regex on selected text
+Context Menus: Adds "Test regex on selection" to your right-click menu
+Alarms: Refreshes your Pro license status daily (if applicable)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BUILT BY ZOVO
+
+Part of the Zovo extension family — premium tools for developers and power users.
+
+Website: https://zovo.one
+Support: support@zovo.one
+Feedback: We read every message

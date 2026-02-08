@@ -1,0 +1,1 @@
+Test and debug regex patterns instantly with real-time highlighting and AI generation - works offline

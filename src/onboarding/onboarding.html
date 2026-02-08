@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=600">
+    <title>Welcome to Regex Tester Pro</title>
+    <link rel="stylesheet" href="../shared/zovo-brand.css">
+    <style>
+        body {
+            font-family: var(--zovo-font-family);
+            background: var(--zovo-bg-secondary);
+            color: var(--zovo-text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .onboarding {
+            width: 520px;
+            background: var(--zovo-bg-primary);
+            border-radius: var(--zovo-radius-xl);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .12);
+            overflow: hidden;
+        }
+
+        .onboarding-progress {
+            height: 4px;
+            background: var(--zovo-bg-tertiary);
+        }
+
+        .onboarding-progress-bar {
+            height: 100%;
+            background: var(--zovo-primary);
+            transition: width .3s ease;
+        }
+
+        .onboarding-slide {
+            display: none;
+            text-align: center;
+            padding: 40px 32px 24px;
+        }
+
+        .onboarding-slide.active {
+            display: block;
+        }
+
+        .onboarding-slide img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .onboarding-slide h1,
+        .onboarding-slide h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .onboarding-subtitle {
+            color: var(--zovo-primary);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .onboarding-description {
+            color: var(--zovo-text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .onboarding-trust {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--zovo-success);
+        }
+
+        .onboarding-feature-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin: 16px 0;
+        }
+
+        .onboarding-feature-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--zovo-text-secondary);
+            border-bottom: 1px solid var(--zovo-bg-tertiary);
+        }
+
+        .onboarding-feature-list li::before {
+            content: "✦ ";
+            color: var(--zovo-primary);
+        }
+
+        .onboarding-pro-features {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin: 16px 0;
+        }
+
+        .onboarding-pro-features li {
+            padding: 6px 0;
+            font-size: 13px;
+            color: var(--zovo-text-secondary);
+        }
+
+        .onboarding-pro-features li::before {
+            content: "⭐ ";
+        }
+
+        .onboarding-pro-price {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--zovo-text-muted);
+        }
+
+        .onboarding-pro-price .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--zovo-primary);
+        }
+
+        .onboarding-cta-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .onboarding-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            border-top: 1px solid var(--zovo-bg-tertiary);
+        }
+
+        .onboarding-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .onboarding-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--zovo-bg-tertiary);
+            transition: background .2s;
+        }
+
+        .onboarding-dots .dot.active {
+            background: var(--zovo-primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-family: var(--zovo-font-family);
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--zovo-radius-md);
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all var(--zovo-transition-fast);
+        }
+
+        .btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--zovo-primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--zovo-primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--zovo-bg-tertiary);
+            color: var(--zovo-text-primary);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--zovo-border);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--zovo-text-secondary);
+        }
+
+        .btn-ghost:hover:not(:disabled) {
+            background: var(--zovo-bg-tertiary);
+        }
+
+        .btn-lg {
+            padding: 12px 24px;
+            font-size: 14px;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="onboarding">
+        <div class="onboarding-progress">
+            <div class="onboarding-progress-bar" id="progressBar" style="width:20%"></div>
+        </div>
+
+        <div class="onboarding-slides">
+            <!-- Slide 1: Welcome -->
+            <div class="onboarding-slide active" data-slide="1">
+                <img src="../../assets/icons/icon-128.png" alt="Regex Tester Pro">
+                <h1>Welcome to Regex Tester Pro</h1>
+                <p class="onboarding-subtitle">Part of the Zovo extension family</p>
+                <p class="onboarding-description">
+                    Test, debug, and master regular expressions right in your browser toolbar.
+                    Real-time match highlighting, capture groups, and AI-powered generation.
+                </p>
+                <div class="onboarding-trust">
+                    <span>✓ No tracking</span>
+                    <span>✓ No data collection</span>
+                    <span>✓ Open source</span>
+                </div>
+            </div>
+
+            <!-- Slide 2: Key Features -->
+            <div class="onboarding-slide" data-slide="2">
+                <h2>Powerful Regex Testing</h2>
+                <ul class="onboarding-feature-list">
+                    <li>Real-time match highlighting as you type</li>
+                    <li>Capture group extraction (named + numbered)</li>
+                    <li>Find & replace with backreferences</li>
+                    <li>One-click flag toggles (g, i, m, s, u, y)</li>
+                    <li>Pattern history — never retype a regex</li>
+                </ul>
+            </div>
+
+            <!-- Slide 3: Pro Features -->
+            <div class="onboarding-slide" data-slide="3">
+                <h2>Unlock Pro Features</h2>
+                <ul class="onboarding-pro-features">
+                    <li>Unlimited AI regex generation from plain English</li>
+                    <li>Multi-flavor support (Python, Go, Java, PHP)</li>
+                    <li>Export to multiple formats</li>
+                    <li>Unlimited pattern history</li>
+                </ul>
+                <p class="onboarding-pro-price">
+                    <span class="price">$4.99/mo</span><br>
+                    <span>or included with Zovo membership</span>
+                </p>
+            </div>
+
+            <!-- Slide 4: Zovo Ecosystem -->
+            <div class="onboarding-slide" data-slide="4">
+                <h2>Part of the <a href="https://zovo.one" target="_blank" rel="noopener noreferrer"
+                        style="color:var(--zovo-primary);text-decoration:none">Zovo</a> Family
+                </h2>
+                <p class="onboarding-description">
+                    Regex Tester Pro is one of 18+ productivity extensions built by <a href="https://zovo.one"
+                        target="_blank" rel="noopener noreferrer"
+                        style="color:var(--zovo-primary);text-decoration:none">Zovo</a>.
+                    They work great alone and even better together.
+                </p>
+                <ul class="onboarding-feature-list">
+                    <li><a href="https://zovo.one" target="_blank" rel="noopener noreferrer"
+                            style="color:inherit;text-decoration:none">Clipboard History
+                            Pro</a> — never lose a copy again</li>
+                    <li><a href="https://zovo.one" target="_blank" rel="noopener noreferrer"
+                            style="color:inherit;text-decoration:none">JSON Formatter Pro</a>
+                        — beautify & validate JSON instantly</li>
+                    <li><a href="https://zovo.one" target="_blank" rel="noopener noreferrer"
+                            style="color:inherit;text-decoration:none">Form Filler Pro</a> —
+                        auto-fill any form in one click</li>
+                </ul>
+                <a href="https://zovo.one" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"
+                    style="margin-top:8px">Browse all Zovo extensions
+                    →</a>
+            </div>
+
+            <!-- Slide 5: Get Started -->
+            <div class="onboarding-slide" data-slide="5">
+                <h2>You're all set!</h2>
+                <p class="onboarding-description">
+                    Click the Regex Tester Pro icon in your toolbar to start testing patterns.
+                </p>
+                <div class="onboarding-cta-group">
+                    <button class="btn btn-primary btn-lg btn-block" id="startBtn">Start Using Regex Tester Pro</button>
+                    <a href="https://zovo.one" target="_blank" class="btn btn-secondary btn-lg btn-block">Join Zovo —
+                        Get All Extensions</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="onboarding-nav">
+            <button class="btn btn-ghost" id="prevBtn" disabled>Back</button>
+            <div class="onboarding-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <button class="btn btn-primary" id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script src="onboarding.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,641 @@
+// ==========================================================================
+// Regex Tester Pro — Core Popup Logic
+// Agent 2: Real-time regex engine, match highlighting, capture groups, replace
+// ==========================================================================
+
+(function () {
+    'use strict';
+
+    // Install global error handler (moved from inline script for CSP compliance)
+    if (typeof ErrorHandler !== 'undefined' && ErrorHandler.installGlobalHandler) {
+        ErrorHandler.installGlobalHandler();
+    }
+
+    // ── DOM refs ──
+    const patternInput = document.getElementById('patternInput');
+    const testString = document.getElementById('testString');
+    const highlightedLayer = document.getElementById('highlightedLayer');
+    const errorLine = document.getElementById('errorLine');
+    const matchCount = document.getElementById('matchCount');
+    const matchResults = document.getElementById('matchResults');
+    const groupSection = document.getElementById('groupSection');
+    const groupResults = document.getElementById('groupResults');
+    const replaceToggle = document.getElementById('replaceToggle');
+    const replaceBody = document.getElementById('replaceBody');
+    const replaceInput = document.getElementById('replaceInput');
+    const replaceResult = document.getElementById('replaceResult');
+    const flagsRow = document.getElementById('flagsRow');
+    const copyBtn = document.getElementById('copyBtn');
+    const savePatternBtn = document.getElementById('savePatternBtn');
+    const aiGenerateBtn = document.getElementById('aiGenerateBtn');
+    const aiCounter = document.getElementById('aiCounter');
+    const themeToggle = document.getElementById('themeToggle');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const proBadge = document.getElementById('proBadge');
+    const usageFooter = document.getElementById('usageFooter');
+
+    // Panels
+    const historyPanel = document.getElementById('historyPanel');
+    const historyOverlay = document.getElementById('historyOverlay');
+    const historyList = document.getElementById('historyList');
+    const historyCount = document.getElementById('historyCount');
+    const closeHistory = document.getElementById('closeHistory');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+    const settingsPanel = document.getElementById('settingsPanel');
+    const settingsOverlay = document.getElementById('settingsOverlay');
+    const closeSettings = document.getElementById('closeSettings');
+    const themeSetting = document.getElementById('themeSetting');
+    const autoSaveSetting = document.getElementById('autoSaveSetting');
+    const defaultFlagsSetting = document.getElementById('defaultFlagsSetting');
+    const licenseKeyInput = document.getElementById('licenseKeyInput');
+    const validateLicenseBtn = document.getElementById('validateLicenseBtn');
+    const versionText = document.getElementById('versionText');
+
+    // Paywall
+    const paywallOverlay = document.getElementById('paywallOverlay');
+    const paywallDismiss = document.getElementById('paywallDismiss');
+    const paywallCta = document.getElementById('paywallCta');
+    const paywallIcon = document.getElementById('paywallIcon');
+    const paywallTitle = document.getElementById('paywallTitle');
+    const paywallBody = document.getElementById('paywallBody');
+
+    // ── State ──
+    let activeFlags = new Set(['g']);
+    let isPro = false;
+    let settings = {};
+    let history = [];
+    let usage = {};
+
+    // ── Init ──
+    async function init() {
+        try {
+            const data = await Storage.load();
+            settings = data.settings;
+            history = data.history;
+            usage = data.usage;
+            isPro = await Payments.isPro();
+
+            // Apply theme
+            applyTheme(settings.theme);
+            themeSetting.value = settings.theme;
+            autoSaveSetting.checked = settings.autoSaveHistory;
+            defaultFlagsSetting.value = settings.defaultFlags.join('');
+
+            // Set default flags
+            activeFlags = new Set(settings.defaultFlags);
+            updateFlagButtons();
+
+            // Pro badge
+            if (isPro) proBadge.hidden = false;
+
+            // Version
+            versionText.textContent = 'v' + chrome.runtime.getManifest().version;
+
+            // Update UI
+            updateUsageFooter();
+            updateAICounter();
+
+            // If there's a pending test string from context menu
+            const { pendingTestString } = await chrome.storage.local.get('pendingTestString');
+            if (pendingTestString) {
+                testString.value = pendingTestString;
+                await chrome.storage.local.remove('pendingTestString');
+                runEngine();
+            }
+
+            // Track popup open
+            Analytics.track('popup_opened');
+
+            // Cross-promotion (MD 03)
+            renderPromo();
+        } catch (e) {
+            console.error('[RegexTesterPro] Init failed:', e);
+            // Attempt graceful degradation — core UI still works
+        }
+    }
+
+    // ── Regex Engine (debounced to avoid O(n) DOM rebuilds per keystroke) ──
+    let _engineTimer = null;
+    function runEngineDebounced() {
+        clearTimeout(_engineTimer);
+        _engineTimer = setTimeout(runEngine, 50);
+    }
+
+    function runEngine() {
+        const pattern = patternInput.value;
+        const text = testString.value;
+        const flags = [...activeFlags].join('');
+
+        // Clear previous
+        highlightedLayer.innerHTML = '';
+        matchResults.innerHTML = '';
+        groupSection.hidden = true;
+        groupResults.innerHTML = '';
+        errorLine.hidden = true;
+        matchCount.textContent = '0 found';
+
+        if (!pattern) {
+            highlightedLayer.textContent = text;
+            matchResults.innerHTML = '<div class="empty-state">Enter a pattern to see matches</div>';
+            updateReplace('', text, flags);
+            return;
+        }
+
+        let regex;
+        try {
+            regex = new RegExp(pattern, flags);
+        } catch (e) {
+            errorLine.textContent = e.message.replace('Invalid regular expression: ', '');
+            errorLine.hidden = false;
+            highlightedLayer.textContent = text;
+            return;
+        }
+
+        // Find all matches
+        const matches = [];
+        let m;
+
+        if (flags.includes('g') || flags.includes('y')) {
+            while ((m = regex.exec(text)) !== null) {
+                matches.push({ value: m[0], index: m.index, groups: m.slice(1), namedGroups: m.groups });
+                if (m[0].length === 0) { regex.lastIndex++; }
+                if (matches.length > 500) break; // Safety
+            }
+        } else {
+            m = regex.exec(text);
+            if (m) {
+                matches.push({ value: m[0], index: m.index, groups: m.slice(1), namedGroups: m.groups });
+            }
+        }
+
+        // Match count
+        matchCount.textContent = matches.length + ' found';
+
+        // Highlighted layer
+        highlightedLayer.innerHTML = buildHighlightedHTML(text, matches);
+
+        // Match list
+        if (matches.length > 0) {
+            matchResults.innerHTML = matches.slice(0, 50).map((match, i) => {
+                const end = match.index + match.value.length;
+                return `<div class="match-item">
+          <span class="match-value">${i + 1}. "${escapeHtml(match.value)}"</span>
+          <span class="match-pos">pos ${match.index}–${end}</span>
+        </div>`;
+            }).join('');
+
+            if (matches.length > 50) {
+                matchResults.innerHTML += `<div class="empty-state">...and ${matches.length - 50} more</div>`;
+            }
+        } else {
+            matchResults.innerHTML = '<div class="empty-state">No matches</div>';
+        }
+
+        // Capture groups (from first match)
+        if (matches.length > 0 && (matches[0].groups.length > 0 || matches[0].namedGroups)) {
+            groupSection.hidden = false;
+            let groupHTML = '';
+
+            // Numbered groups
+            matches[0].groups.forEach((val, i) => {
+                groupHTML += `<div class="group-item">
+          <span class="group-name">Group ${i + 1}</span>
+          <span class="group-value">${escapeHtml(val || '(empty)')}</span>
+        </div>`;
+            });
+
+            // Named groups
+            if (matches[0].namedGroups) {
+                for (const [name, val] of Object.entries(matches[0].namedGroups)) {
+                    groupHTML += `<div class="group-item">
+            <span class="group-name">${escapeHtml(name)}</span>
+            <span class="group-value">${escapeHtml(val || '(empty)')}</span>
+          </div>`;
+                }
+            }
+
+            groupResults.innerHTML = groupHTML;
+        }
+
+        // Replace
+        updateReplace(pattern, text, flags);
+
+        // Track usage
+        Analytics.track('regex_tested', { matchCount: matches.length, flags });
+        Analytics.incrementTests();
+        updateUsageFooter();
+    }
+
+    function buildHighlightedHTML(text, matches) {
+        if (matches.length === 0) return escapeHtml(text);
+
+        let result = '';
+        let lastIndex = 0;
+
+        for (const match of matches) {
+            // Text before match
+            result += escapeHtml(text.slice(lastIndex, match.index));
+            // Match
+            result += '<mark>' + escapeHtml(match.value) + '</mark>';
+            lastIndex = match.index + match.value.length;
+        }
+
+        // Remaining text
+        result += escapeHtml(text.slice(lastIndex));
+        return result;
+    }
+
+    function updateReplace(pattern, text, flags) {
+        if (!replaceBody || replaceBody.hidden) return;
+        const replacement = replaceInput.value;
+        if (!pattern) {
+            replaceResult.textContent = text;
+            return;
+        }
+        try {
+            const regex = new RegExp(pattern, flags);
+            replaceResult.textContent = text.replace(regex, replacement);
+        } catch (e) {
+            replaceResult.textContent = '(invalid pattern)';
+        }
+    }
+
+    // ── Flag Toggles ──
+    function updateFlagButtons() {
+        flagsRow.querySelectorAll('.flag-btn').forEach(btn => {
+            btn.classList.toggle('active', activeFlags.has(btn.dataset.flag));
+        });
+    }
+
+    flagsRow.addEventListener('click', (e) => {
+        const btn = e.target.closest('.flag-btn');
+        if (!btn) return;
+        const flag = btn.dataset.flag;
+        if (activeFlags.has(flag)) {
+            activeFlags.delete(flag);
+        } else {
+            activeFlags.add(flag);
+        }
+        updateFlagButtons();
+        runEngine();
+    });
+
+    // ── Live Input (debounced) ──
+    patternInput.addEventListener('input', runEngineDebounced);
+    testString.addEventListener('input', runEngineDebounced);
+    testString.addEventListener('scroll', () => {
+        highlightedLayer.scrollTop = testString.scrollTop;
+        highlightedLayer.scrollLeft = testString.scrollLeft;
+    });
+
+    // ── Replace Toggle ──
+    replaceToggle.addEventListener('click', () => {
+        const isHidden = replaceBody.hidden;
+        replaceBody.hidden = !isHidden;
+        replaceToggle.classList.toggle('open', isHidden);
+        if (isHidden) runEngine();
+    });
+    replaceInput.addEventListener('input', () => {
+        updateReplace(patternInput.value, testString.value, [...activeFlags].join(''));
+    });
+
+    // ── Copy ──
+    copyBtn.addEventListener('click', () => {
+        const pattern = patternInput.value;
+        const flags = [...activeFlags].join('');
+        navigator.clipboard.writeText(`/${pattern}/${flags}`).then(() => {
+            copyBtn.textContent = '✓ Copied';
+            setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 1500);
+        });
+    });
+
+    // ── Save Pattern ──
+    savePatternBtn.addEventListener('click', async () => {
+        const pattern = patternInput.value;
+        if (!pattern) return;
+
+        // Check free limit
+        if (!isPro && history.length >= 10) {
+            showPaywall('history');
+            return;
+        }
+
+        const entry = {
+            id: Date.now().toString(36),
+            pattern,
+            flags: [...activeFlags].join(''),
+            testString: testString.value.slice(0, 200),
+            timestamp: Date.now()
+        };
+
+        history.unshift(entry);
+
+        // Enforce limits
+        if (!isPro && history.length > 10) history = history.slice(0, 10);
+
+        await Storage.saveHistory(history);
+        updateUsageFooter();
+        Analytics.track('pattern_saved', { count: history.length });
+
+        savePatternBtn.textContent = '✓ Saved';
+        setTimeout(() => { savePatternBtn.textContent = '💾 Save'; }, 1500);
+    });
+
+    // ── History Panel ──
+    savePatternBtn.addEventListener('dblclick', () => openHistoryPanel());
+
+    function openHistoryPanel() {
+        renderHistory();
+        historyPanel.hidden = false;
+        historyOverlay.hidden = false;
+    }
+
+    function closeHistoryPanel() {
+        historyPanel.hidden = true;
+        historyOverlay.hidden = true;
+    }
+
+    function renderHistory() {
+        const limit = isPro ? '∞' : '10';
+        historyCount.textContent = `${history.length}/${limit}`;
+
+        if (history.length === 0) {
+            historyList.innerHTML = '<div class="empty-state">No saved patterns yet</div>';
+            return;
+        }
+
+        historyList.innerHTML = history.map(item => {
+            const date = new Date(item.timestamp).toLocaleDateString();
+            return `<div class="history-item" data-id="${item.id}">
+        <div class="history-pattern">/${escapeHtml(item.pattern)}/${item.flags}</div>
+        <div class="history-meta">${date}</div>
+      </div>`;
+        }).join('');
+    }
+
+    historyList.addEventListener('click', (e) => {
+        const item = e.target.closest('.history-item');
+        if (!item) return;
+        const entry = history.find(h => h.id === item.dataset.id);
+        if (entry) {
+            patternInput.value = entry.pattern;
+            activeFlags = new Set(entry.flags.split(''));
+            updateFlagButtons();
+            if (entry.testString) testString.value = entry.testString;
+            runEngine();
+            closeHistoryPanel();
+        }
+    });
+
+    closeHistory.addEventListener('click', closeHistoryPanel);
+    historyOverlay.addEventListener('click', closeHistoryPanel);
+    clearHistoryBtn.addEventListener('click', async () => {
+        history = [];
+        await Storage.saveHistory(history);
+        renderHistory();
+        updateUsageFooter();
+    });
+
+    // ── Settings Panel ──
+    settingsBtn.addEventListener('click', () => {
+        settingsPanel.hidden = false;
+        settingsOverlay.hidden = false;
+        if (isPro) licenseKeyInput.value = '••••••••';
+    });
+
+    function closeSettingsPanel() {
+        settingsPanel.hidden = true;
+        settingsOverlay.hidden = true;
+    }
+
+    closeSettings.addEventListener('click', closeSettingsPanel);
+    settingsOverlay.addEventListener('click', closeSettingsPanel);
+
+    themeSetting.addEventListener('change', (e) => {
+        settings.theme = e.target.value;
+        applyTheme(settings.theme);
+        Storage.saveSettings(settings);
+    });
+
+    autoSaveSetting.addEventListener('change', (e) => {
+        settings.autoSaveHistory = e.target.checked;
+        Storage.saveSettings(settings);
+    });
+
+    defaultFlagsSetting.addEventListener('change', (e) => {
+        settings.defaultFlags = e.target.value.split('');
+        Storage.saveSettings(settings);
+    });
+
+    validateLicenseBtn.addEventListener('click', async () => {
+        const key = licenseKeyInput.value.trim();
+        if (!key || key === '••••••••') return;
+        validateLicenseBtn.textContent = 'Checking...';
+        const result = await Payments.validateLicense(key);
+        if (result.valid) {
+            isPro = true;
+            proBadge.hidden = false;
+            validateLicenseBtn.textContent = '✓ Activated';
+            updateUsageFooter();
+            updateAICounter();
+        } else {
+            validateLicenseBtn.textContent = 'Invalid Key';
+        }
+        setTimeout(() => { validateLicenseBtn.textContent = 'Validate'; }, 2000);
+    });
+
+    // ── Theme ──
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else if (theme === 'light') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            // System
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        }
+    }
+
+    themeToggle.addEventListener('click', () => {
+        const current = settings.theme;
+        const next = current === 'system' ? 'dark' : current === 'dark' ? 'light' : 'system';
+        settings.theme = next;
+        applyTheme(next);
+        Storage.saveSettings(settings);
+    });
+
+    // ── AI Generate ──
+    aiGenerateBtn.addEventListener('click', async () => {
+        // Check limit
+        if (!isPro) {
+            const remaining = await Payments.getAIRemaining();
+            if (remaining <= 0) {
+                showPaywall('ai_limit');
+                return;
+            }
+        }
+
+        const description = prompt('Describe what you want to match:');
+        if (!description) return;
+
+        aiGenerateBtn.disabled = true;
+        aiGenerateBtn.textContent = '🤖 Generating...';
+
+        try {
+            // Simulate AI generation (replace with actual Zovo API call)
+            const result = await simulateAIGenerate(description);
+            patternInput.value = result.pattern;
+            if (result.flags) {
+                activeFlags = new Set(result.flags.split(''));
+                updateFlagButtons();
+            }
+            runEngine();
+
+            // Decrement AI usage
+            if (!isPro) {
+                await Payments.decrementAI();
+                updateAICounter();
+            }
+
+            Analytics.track('ai_generated', { description: description.slice(0, 50) });
+        } catch (e) {
+            alert('AI generation failed. Try again later.');
+        }
+
+        aiGenerateBtn.disabled = false;
+        // Rebuild button content without losing aiCounter reference
+        const remaining = isPro ? '∞' : (await Payments.getAIRemaining()) + '/3';
+        aiGenerateBtn.textContent = '';
+        aiGenerateBtn.append('🤖 AI Generate ');
+        const pill = document.createElement('span');
+        pill.className = 'pro-pill';
+        pill.id = 'aiCounter';
+        pill.textContent = remaining;
+        aiGenerateBtn.appendChild(pill);
+    });
+
+    async function simulateAIGenerate(description) {
+        // Common patterns map (offline fallback)
+        // NOTE: Single-escaped backslashes — these go into new RegExp() as strings
+        const patterns = {
+            'email': { pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', flags: 'g' },
+            'url': { pattern: 'https?:\/\/[\w\-._~:/?#\[\]@!$&\'()*+,;=]+', flags: 'gi' },
+            'phone': { pattern: '\+?\d{1,3}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}', flags: 'g' },
+            'ip': { pattern: '\b(?:\d{1,3}\.){3}\d{1,3}\b', flags: 'g' },
+            'date': { pattern: '\d{4}[-/]\d{2}[-/]\d{2}', flags: 'g' },
+            'hex color': { pattern: '#(?:[0-9a-fA-F]{3}){1,2}\b', flags: 'gi' },
+            'number': { pattern: '-?\d+(?:\.\d+)?', flags: 'g' },
+            'word': { pattern: '\b\w+\b', flags: 'g' },
+        };
+
+        // Simple keyword matching
+        const lower = description.toLowerCase();
+        for (const [key, val] of Object.entries(patterns)) {
+            if (lower.includes(key)) return val;
+        }
+
+        // Fallback — escape user input to prevent regex injection
+        const escaped = description.split(' ')[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return { pattern: '\b' + escaped + '\b', flags: 'gi' };
+    }
+
+    function updateAICounter() {
+        // Re-query from DOM each time — the pill element gets recreated after AI generation
+        const counter = document.getElementById('aiCounter');
+        if (!counter) return;
+        if (isPro) {
+            counter.textContent = '∞';
+        } else {
+            Payments.getAIRemaining().then(remaining => {
+                // Re-query again inside async callback since DOM may have changed
+                const c = document.getElementById('aiCounter');
+                if (c) c.textContent = remaining + '/3';
+            });
+        }
+    }
+
+    // ── Paywall ──
+    function showPaywall(trigger) {
+        const configs = {
+            ai_limit: {
+                icon: '🤖',
+                title: 'AI Generations Used Up Today',
+                body: 'Unlock unlimited AI-powered regex generation with Pro.',
+                cta: 'Upgrade to Pro — $4.99/mo'
+            },
+            history: {
+                icon: '📚',
+                title: 'Pattern Library Full',
+                body: 'Save unlimited patterns, organize with tags, and search your history.',
+                cta: 'Upgrade to Pro — $4.99/mo'
+            },
+            multi_flavor: {
+                icon: '🔒',
+                title: 'Multi-Flavor Regex',
+                body: 'Test patterns against Python, Go, Java, and more with Pro.',
+                cta: 'Unlock All Engines — Go Pro'
+            }
+        };
+
+        const config = configs[trigger] || configs.ai_limit;
+        paywallIcon.textContent = config.icon;
+        paywallTitle.textContent = config.title;
+        paywallBody.textContent = config.body;
+        paywallCta.textContent = config.cta;
+        paywallOverlay.hidden = false;
+
+        Analytics.track('paywall_shown', { trigger });
+    }
+
+    paywallDismiss.addEventListener('click', () => {
+        paywallOverlay.hidden = true;
+        Analytics.track('paywall_dismissed');
+    });
+
+    paywallCta.addEventListener('click', () => {
+        chrome.tabs.create({ url: 'https://zovo.one/pro?ref=regex-tester-pro' });
+        Analytics.track('upgrade_clicked');
+        paywallOverlay.hidden = true;
+    });
+
+    // ── Usage Footer ──
+    function updateUsageFooter() {
+        const historyLimit = isPro ? '∞' : '10';
+        Payments.getAIRemaining().then(remaining => {
+            const aiDisplay = isPro ? '∞' : remaining + '/3';
+            usageFooter.textContent = `History: ${history.length}/${historyLimit} · AI: ${aiDisplay} today`;
+        });
+    }
+
+    // ── Cross-Promotion (MD 03) ──
+    function renderPromo() {
+        const promoList = document.getElementById('promoList');
+        if (!promoList) return;
+        const recommendations = ZovoCatalog.getRecommendations('regex-tester-pro', 3);
+        promoList.innerHTML = recommendations.map(ext => `
+      <a class="promo-card" href="${ext.storeUrl}?ref=regex-tester-pro" target="_blank">
+        <div class="promo-card-name">${ext.name}</div>
+        <div class="promo-card-tagline">${ext.tagline}</div>
+      </a>
+    `).join('');
+    }
+
+    // ── Helpers ──
+    function escapeHtml(str) {
+        if (typeof str !== 'string') return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // ── Start ──
+    init();
+})();

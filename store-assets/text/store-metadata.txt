@@ -1,0 +1,7 @@
+Extension Name: Regex Tester Pro
+Short Name: Regex Pro
+Category: Developer Tools
+Language: English
+Homepage URL: https://zovo.one/tools/regex-tester-pro
+Support URL: https://zovo.one/support
+Privacy Policy URL: https://zovo.one/privacy/regex-tester-pro

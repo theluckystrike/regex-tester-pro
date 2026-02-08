@@ -1,0 +1,14 @@
+Regex Tester Pro serves a single purpose: testing and debugging regular expressions directly in your browser toolbar.
+
+Specifically, this extension:
+• Provides a real-time regex testing environment with match highlighting
+• Saves regex pattern history locally for quick recall
+• Does NOT collect, transmit, or process any user data externally
+
+All processing happens locally in your browser. No data is collected, transmitted, or stored on external servers. Your regex patterns and test strings never leave your device.
+
+The extension requires 4 permissions to function:
+• Storage: Used to save your settings, pattern history, and preferences locally
+• ActiveTab: Used to enable the context menu feature on the current page when you right-click
+• ContextMenus: Used to add "Test regex on selection" to your right-click menu
+• Alarms: Used to schedule daily license status refresh for Pro users
