@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Tester Pro . Help Center</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --bg: #0a0a14;
+            --bg-card: #12122a;
+            --bg-elevated: #1a1a36;
+            --bg-code: #0e0e22;
+            --text: #eeeef5;
+            --text-secondary: #c4c4d8;
+            --text-muted: #8888aa;
+            --border: #22224a;
+            --accent-green: #22c55e;
+            --accent-amber: #f59e0b;
+            --accent-cyan: #06b6d4;
+            --accent-pink: #ec4899;
+            --gradient-hero: linear-gradient(135deg, #1a1040 0%, #0a0a20 40%, #0e1a2e 100%);
+            --gradient-accent: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* =============================================
+           HERO SECTION
+           ============================================= */
+        .hero {
+            background: var(--gradient-hero);
+            padding: 80px 24px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--primary-glow);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--primary-light);
+            padding: 4px 16px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1.15;
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, #fff 0%, #c4c4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .hero-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 28px;
+        }
+
+        .hero-nav a {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 150ms ease;
+        }
+
+        .hero-nav a:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* =============================================
+           CONTAINER
+           ============================================= */
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 32px 24px 80px;
+        }
+
+        /* =============================================
+           SECTION HEADERS
+           ============================================= */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            margin-top: 48px;
+        }
+
+        .section-header:first-child {
+            margin-top: 0;
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        /* =============================================
+           FEATURE CARDS
+           ============================================= */
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 14px;
+            transition: all 200ms ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08);
+        }
+
+        .fc-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .fc-icon {
+            font-size: 28px;
+        }
+
+        .fc-title-group {
+            flex: 1;
+        }
+
+        .fc-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .fc-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 99px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .fc-badge.core {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .fc-badge.pro {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        .fc-badge.new {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+
+        .fc-desc {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.65;
+            margin-bottom: 14px;
+        }
+
+        /* =============================================
+           STEPS (numbered workflow)
+           ============================================= */
+        .steps-list {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .steps-list li {
+            counter-increment: steps;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .steps-list li::before {
+            content: counter(steps);
+            min-width: 26px;
+            height: 26px;
+            background: var(--gradient-accent);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .steps-list li strong {
+            color: var(--text);
+        }
+
+        /* =============================================
+           CODE BLOCKS
+           ============================================= */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-code);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: var(--primary-light);
+            border: 1px solid var(--border);
+        }
+
+        .code-example {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            margin: 10px 0 14px;
+        }
+
+        .code-example .hl {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .code-example .str {
+            color: var(--accent-pink);
+        }
+
+        .code-example .cmt {
+            color: #555577;
+        }
+
+        .code-example .ok {
+            color: var(--accent-green);
+        }
+
+        .code-example .flag {
+            color: var(--accent-amber);
+        }
+
+        /* =============================================
+           TIP BOXES
+           ============================================= */
+        .tip-box {
+            display: flex;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 12px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        .tip-box.purple {
+            background: rgba(99, 102, 241, 0.08);
+            border-left: 3px solid var(--primary);
+        }
+
+        .tip-box.green {
+            background: rgba(34, 197, 94, 0.08);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .tip-box.amber {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--accent-amber);
+        }
+
+        .tip-box strong {
+            color: var(--text);
+        }
+
+        .tip-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* =============================================
+           GRID LAYOUTS
+           ============================================= */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 14px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .mini-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            transition: 150ms ease;
+        }
+
+        .mini-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .mini-card-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .mini-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .mini-card-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* =============================================
+           SHORTCUT TABLE
+           ============================================= */
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .sc-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        kbd {
+            display: inline-block;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text);
+            box-shadow: 0 1px 0 var(--border);
+        }
+
+        .sc-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* =============================================
+           LANGUAGE GRID (Code Export)
+           ============================================= */
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .lang-chip {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .lang-chip-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* =============================================
+           FLOW DIAGRAM
+           ============================================= */
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 16px 0;
+        }
+
+        .flow-node {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .flow-node.highlight {
+            background: var(--gradient-accent);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .flow-arrow {
+            color: var(--primary-light);
+            font-size: 18px;
+        }
+
+        /* =============================================
+           FOOTER
+           ============================================= */
+        .help-footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 32px;
+        }
+
+        .help-footer-logo {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .help-footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .help-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .help-footer p {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .grid-2,
+            .shortcut-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .lang-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-header h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════
+         HERO
+         ═══════════════════════════════════════════ -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Help Center</div>
+            <h1>Everything You Need to Know</h1>
+            <p>Learn how to get the most out of Regex Tester Pro. Every feature explained, every workflow covered, every
+                shortcut revealed.</p>
+
+            <nav class="hero-nav">
+                <a href="#basics">Getting Started</a>
+                <a href="#matching">Pattern Matching</a>
+                <a href="#ai">AI Generate</a>
+                <a href="#explainer">Pattern Explainer</a>
+                <a href="#examples">Examples Library</a>
+                <a href="#export">Code Export</a>
+                <a href="#replace">Find + Replace</a>
+                <a href="#shortcuts">Shortcuts</a>
+                <a href="#protips">Pro Tips</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 1: GETTING STARTED
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="basics">
+            <div class="section-icon">🚀</div>
+            <h2>Getting Started</h2>
+        </div>
+        <p class="section-subtitle">From zero to your first match in under 10 seconds. No account needed, no setup
+            required. Just open the popup and start testing.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">⚡</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Your First Match</div>
+                </div>
+                <span class="fc-badge core">Core</span>
+            </div>
+            <div class="fc-desc">
+                The extension works like a live playground. Everything happens in real-time as you type. No buttons to
+                click, no delays, no waiting. Just type and watch the magic.
+            </div>
+            <ol class="steps-list">
+                <li><strong>Open the extension</strong> by clicking its icon in your Chrome toolbar</li>
+                <li><strong>Type a regex pattern</strong> in the top input field (try <code>\d+</code> to match all
+                    numbers)</li>
+                <li><strong>Enter or paste test text</strong> in the text area below</li>
+                <li><strong>Watch matches appear</strong> instantly highlighted in your text</li>
+                <li><strong>See detailed results</strong> including match count, individual matches, and capture groups
+                </li>
+            </ol>
+
+            <div class="flow">
+                <div class="flow-node">Type Pattern</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">Paste Text</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node highlight">See Matches Instantly</div>
+            </div>
+
+            <div class="tip-box green">
+                <span class="tip-icon">💡</span>
+                <span>On first install, the extension automatically loads an Email validation example so you can see how
+                    everything works right away</span>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🚩</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Regex Flags</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Flags control how the regex engine processes your pattern. Toggle them with a single click on the flag
+                buttons next to the pattern input.
+            </div>
+
+            <div class="grid-2">
+                <div class="mini-card">
+                    <div class="mini-card-title"><code>g</code> Global</div>
+                    <div class="mini-card-desc">Find ALL matches in the text, not just the first one</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-card-title"><code>i</code> Case Insensitive</div>
+                    <div class="mini-card-desc">Match uppercase and lowercase letters interchangeably</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-card-title"><code>m</code> Multiline</div>
+                    <div class="mini-card-desc">Make ^ and $ match the start and end of each line</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-card-title"><code>s</code> Dotall</div>
+                    <div class="mini-card-desc">Make the dot (.) also match newline characters</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-card-title"><code>u</code> Unicode</div>
+                    <div class="mini-card-desc">Enable full Unicode support for international text</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-card-title"><code>y</code> Sticky</div>
+                    <div class="mini-card-desc">Match only from the current position in the text</div>
+                </div>
+            </div>
+
+            <div class="tip-box purple">
+                <span class="tip-icon">⚙️</span>
+                <span>Set your preferred default flags in Settings so every new session starts with them already
+                    active</span>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 2: PATTERN MATCHING
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="matching">
+            <div class="section-icon">🔍</div>
+            <h2>Pattern Matching</h2>
+        </div>
+        <p class="section-subtitle">The core engine runs on every keystroke. Type your pattern and test string, and
+            results update instantly with zero delay.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🎯</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Live Match Highlighting</div>
+                </div>
+                <span class="fc-badge core">Core</span>
+            </div>
+            <div class="fc-desc">
+                Matches are highlighted directly in your test string as you type. The match count updates in real-time
+                with a satisfying pulse animation. Each individual match is shown below with its position and value.
+            </div>
+
+            <div class="code-example">
+                <span class="cmt">Pattern</span> <span class="hl">\b[A-Z]\w+</span> <span class="flag">gi</span>
+                <span class="cmt">Test</span> <span class="str">Hello World, welcome to Regex Tester Pro</span>
+                <span class="cmt">Matches</span> <span class="ok">Hello</span> <span class="ok">World</span> <span
+                    class="ok">Regex</span> <span class="ok">Tester</span> <span class="ok">Pro</span> <span
+                    class="cmt">(5 found)</span>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">📦</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Capture Groups</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                When your regex contains parentheses for capture groups, the extension automatically extracts and
+                displays each group separately. Both numbered groups and named groups (using
+                <code>(?&lt;name&gt;...)</code>) are fully supported.
+            </div>
+
+            <div class="code-example">
+                <span class="cmt">Pattern</span> <span
+                    class="hl">(?&lt;year&gt;\d{4})-(?&lt;month&gt;\d{2})-(?&lt;day&gt;\d{2})</span>
+                <span class="cmt">Test</span> <span class="str">Today is 2026-02-08</span>
+                <span class="cmt">Groups</span> year = <span class="ok">2026</span> month = <span class="ok">02</span>
+                day = <span class="ok">08</span>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 3: AI GENERATE
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="ai">
+            <div class="section-icon">🤖</div>
+            <h2>AI Generate</h2>
+        </div>
+        <p class="section-subtitle">Describe what you want to match in plain English. Let AI write the regex for you.
+            This is the fastest way to build complex patterns without memorizing syntax.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🤖</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">How AI Generate Works</div>
+                </div>
+                <span class="fc-badge new">Powerful</span>
+            </div>
+            <div class="fc-desc">
+                Click the AI Generate button, describe your pattern in natural language, and receive a working regex
+                instantly. The pattern is automatically loaded into the tester so you can verify and refine it.
+            </div>
+            <ol class="steps-list">
+                <li>Click the <strong>🤖 AI Generate</strong> button in the action bar</li>
+                <li>A prompt dialog appears. <strong>Describe what you want to match</strong> in plain English</li>
+                <li>The AI analyzes your description and <strong>generates the optimal regex pattern</strong></li>
+                <li>The pattern and appropriate flags are <strong>auto-loaded into the tester</strong></li>
+                <li><strong>Verify the results</strong> against your test text and refine as needed</li>
+            </ol>
+
+            <div class="fc-desc" style="margin-top:14px;margin-bottom:8px"><strong>Example Prompts That Produce Great
+                    Results</strong></div>
+            <div class="code-example">
+                <span class="str">"match email addresses"</span>
+                <span class="str">"find all US phone numbers with optional country code"</span>
+                <span class="str">"extract dates in YYYY-MM-DD format"</span>
+                <span class="str">"validate strong passwords with 8+ characters, uppercase, number, and symbol"</span>
+                <span class="str">"find duplicate consecutive words"</span>
+                <span class="str">"match hex color codes like #ff5500 or #f50"</span>
+                <span class="str">"extract all URLs from text including query parameters"</span>
+                <span class="str">"find all JavaScript import statements"</span>
+            </div>
+
+            <div class="tip-box amber">
+                <span class="tip-icon">🎯</span>
+                <span><strong>Get better results</strong> by being specific about the format you expect. Instead of
+                    "match dates" try "match dates like DD/MM/YYYY or DD-MM-YYYY". Mention edge cases and you will get a
+                    more robust pattern.</span>
+            </div>
+
+            <div class="tip-box purple">
+                <span class="tip-icon">⭐</span>
+                <span>Free users get <strong>3 AI generations per day</strong>. Pro users get <strong>unlimited</strong>
+                    AI generations. Get your Pro license at <a href="https://zovo.one" target="_blank" rel="noopener"
+                        style="color:var(--primary-light)">zovo.one</a></span>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 4: PATTERN EXPLAINER
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="explainer">
+            <div class="section-icon">🧠</div>
+            <h2>Pattern Explainer</h2>
+        </div>
+        <p class="section-subtitle">Every regex token broken down into plain English. This is the fastest way to
+            understand complex patterns, whether you wrote them or found them online.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🧠</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Real-Time Pattern Breakdown</div>
+                </div>
+                <span class="fc-badge new">New</span>
+            </div>
+            <div class="fc-desc">
+                Click the "🧠 Pattern Explanation" toggle below the match results. As you type or load any pattern, the
+                explainer automatically tokenizes it and shows a plain-English description of each component.
+            </div>
+            <ol class="steps-list">
+                <li>Click the <strong>🧠 Pattern Explanation</strong> collapsible section to expand it</li>
+                <li>Type or load any regex pattern in the input field above</li>
+                <li>Each token is displayed with its <strong>exact syntax</strong> on the left and a
+                    <strong>human-readable description</strong> on the right</li>
+                <li>The breakdown <strong>updates automatically</strong> as you modify the pattern</li>
+            </ol>
+
+            <div class="code-example">
+                <span class="cmt">For the pattern</span> <span class="hl">^[A-Z]\w+@\w+\.\w{2,}$</span> <span
+                    class="cmt">you will see</span>
+
+                <span class="hl">^</span> Start of string
+                <span class="hl">[A-Z]</span> Any character in range A to Z
+                <span class="hl">\w</span> Word character [A-Za-z0-9_]
+                <span class="hl">+</span> 1 or more times (greedy)
+                <span class="hl">@</span> Literal "@"
+                <span class="hl">\w</span> Word character [A-Za-z0-9_]
+                <span class="hl">+</span> 1 or more times (greedy)
+                <span class="hl">\.</span> Literal "." character
+                <span class="hl">\w</span> Word character [A-Za-z0-9_]
+                <span class="hl">{2,}</span> 2 or more times
+                <span class="hl">$</span> End of string
+            </div>
+
+            <div class="tip-box green">
+                <span class="tip-icon">🧠</span>
+                <span><strong>Learning hack</strong> . Paste any regex from Stack Overflow or documentation, expand the
+                    explainer, and read the breakdown. This is significantly faster than decoding the pattern
+                    mentally.</span>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 5: EXAMPLES LIBRARY
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="examples">
+            <div class="section-icon">📖</div>
+            <h2>Examples Library</h2>
+        </div>
+        <p class="section-subtitle">40+ curated regex patterns across 8 categories. Each example comes with realistic
+            test strings so you see exactly what matches and what does not.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">📖</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Browse, Click, Learn</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Click the "📖 Examples" button in the action bar. Browse categories using the pill tabs at the top.
+                Click any sample card to automatically load the pattern, flags, and test string into the main interface.
+                The regex engine runs immediately.
+            </div>
+            <ol class="steps-list">
+                <li>Click <strong>📖 Examples</strong> to open the samples panel</li>
+                <li><strong>Browse categories</strong> using the scrollable tabs</li>
+                <li><strong>Click a sample card</strong> to load it into the tester</li>
+                <li><strong>See matches highlighted</strong> immediately and read the results</li>
+                <li><strong>Modify the pattern</strong> to experiment and deepen your understanding</li>
+            </ol>
+        </div>
+
+        <div class="fc-desc" style="margin-bottom:8px"><strong>8 Categories Covering All Major Use Cases</strong></div>
+        <div class="grid-3">
+            <div class="mini-card">
+                <div class="mini-card-icon">🟢</div>
+                <div class="mini-card-title">Basics</div>
+                <div class="mini-card-desc">Words, numbers, lines, sentences, quoted strings</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-card-icon">✅</div>
+                <div class="mini-card-title">Validation</div>
+                <div class="mini-card-desc">Email, URL, phone, credit card, passwords</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-card-icon">📦</div>
+                <div class="mini-card-title">Extraction</div>
+                <div class="mini-card-desc">IPs, dates, hex colors, hashtags, prices</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-card-icon">🔬</div>
+                <div class="mini-card-title">Advanced</div>
+                <div class="mini-card-desc">Lookaheads, backrefs, named groups</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-card-icon">🌐</div>
+                <div class="mini-card-title">Web Dev</div>
+                <div class="mini-card-desc">HTML tags, CSS, JS imports, APIs</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-card-icon">📊</div>
+                <div class="mini-card-title">Data + Logs</div>
+                <div class="mini-card-desc">Log levels, timestamps, UUIDs</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-card-icon">🌍</div>
+                <div class="mini-card-title">International</div>
+                <div class="mini-card-desc">Unicode, emoji, CJK, postal codes</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-card-icon">🔄</div>
+                <div class="mini-card-title">Replace</div>
+                <div class="mini-card-desc">Strip HTML, trim, mask, transform</div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 6: CODE EXPORT
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="export">
+            <div class="section-icon">💻</div>
+            <h2>Code Export</h2>
+        </div>
+        <p class="section-subtitle">Once you have a working regex, export it as copy-ready code in your programming
+            language. Flags are automatically translated to the correct syntax for each language.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">💻</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Export to 8 Languages</div>
+                </div>
+                <span class="fc-badge new">New</span>
+            </div>
+            <div class="fc-desc">
+                Click the "💻 Export" button to open the code export panel. Select your target language, preview the
+                generated code, and copy it to your clipboard with one click. Flags like <code>i</code>, <code>m</code>,
+                and <code>s</code> are automatically converted to the equivalent syntax in each language.
+            </div>
+            <ol class="steps-list">
+                <li>Write and test your regex pattern in the main interface</li>
+                <li>Click the <strong>💻 Export</strong> button in the action bar</li>
+                <li><strong>Select your language</strong> from the tabs at the top</li>
+                <li>Review the generated code in the preview area</li>
+                <li>Click <strong>📋 Copy Code</strong> to copy it to your clipboard</li>
+            </ol>
+        </div>
+
+        <div class="fc-desc" style="margin-bottom:8px"><strong>Supported Languages</strong></div>
+        <div class="lang-grid">
+            <div class="lang-chip"><span class="lang-chip-icon">🟨</span>JavaScript</div>
+            <div class="lang-chip"><span class="lang-chip-icon">🐍</span>Python</div>
+            <div class="lang-chip"><span class="lang-chip-icon">☕</span>Java</div>
+            <div class="lang-chip"><span class="lang-chip-icon">🐘</span>PHP</div>
+            <div class="lang-chip"><span class="lang-chip-icon">🔵</span>Go</div>
+            <div class="lang-chip"><span class="lang-chip-icon">💎</span>Ruby</div>
+            <div class="lang-chip"><span class="lang-chip-icon">🟣</span>C#</div>
+            <div class="lang-chip"><span class="lang-chip-icon">🦀</span>Rust</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 7: FIND & REPLACE
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="replace">
+            <div class="section-icon">🔄</div>
+            <h2>Find + Replace</h2>
+        </div>
+        <p class="section-subtitle">Preview regex substitutions in real-time before writing them into your code.
+            Supports backreferences so you can rearrange captured groups.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🔄</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Live Replace Preview</div>
+                </div>
+                <span class="fc-badge core">Core</span>
+            </div>
+            <div class="fc-desc">
+                Click the "Find + Replace" toggle to expand the replace section. Enter your replacement string using
+                <code>$1</code>, <code>$2</code>, etc. for backreferences. The preview updates live as you type.
+            </div>
+
+            <div class="code-example">
+                <span class="cmt">Pattern</span> <span class="hl">(\w+)\s+(\w+)</span>
+                <span class="cmt">Replace</span> <span class="str">$2 $1</span>
+                <span class="cmt">Input</span> John Smith, Jane Doe
+                <span class="cmt">Output</span> <span class="ok">Smith John, Doe Jane</span>
+            </div>
+
+            <div class="tip-box green">
+                <span class="tip-icon">🔄</span>
+                <span>Load a sample from the "🔄 Replace" category in the Examples Library to see practical replace
+                    patterns in action . These include stripping HTML tags, collapsing whitespace, and formatting
+                    Markdown links.</span>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 8: CHEAT SHEET
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="cheatsheet">
+            <div class="section-icon">📋</div>
+            <h2>Built-In Cheat Sheet</h2>
+        </div>
+        <p class="section-subtitle">Forgot a syntax? Click the 📋 icon in the header for an instant reference covering
+            all major regex constructs. Always one click away, no context switching needed.</p>
+
+        <div class="feature-card">
+            <div class="fc-desc">
+                The cheat sheet covers Characters, Quantifiers, Anchors + Boundaries, Groups + Lookaround, Character
+                Classes, Flags, and Keyboard Shortcuts. It slides in from the right side so you can reference it while
+                keeping your pattern visible.
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 9: RIGHT-CLICK WORKFLOW
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="contextmenu">
+            <div class="section-icon">🖱️</div>
+            <h2>Right-Click to Test</h2>
+        </div>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🖱️</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Test Any Text from Any Page</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Select text on any webpage (Stack Overflow answers, GitHub code, documentation), right-click, and choose
+                "Test with Regex Tester Pro". The selected text is automatically loaded as your test string. The popup
+                opens and you are ready to match immediately.
+            </div>
+            <ol class="steps-list">
+                <li><strong>Select text</strong> on any webpage</li>
+                <li><strong>Right-click</strong> to open the context menu</li>
+                <li>Click <strong>"Test with Regex Tester Pro"</strong></li>
+                <li>The extension opens with your selected text <strong>ready to test</strong></li>
+            </ol>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 10: KEYBOARD SHORTCUTS
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="shortcuts">
+            <div class="section-icon">⌨️</div>
+            <h2>Keyboard Shortcuts</h2>
+        </div>
+        <p class="section-subtitle">Navigate faster without lifting your hands from the keyboard.</p>
+
+        <div class="shortcut-grid">
+            <div class="sc-item">
+                <kbd>Ctrl</kbd> + <kbd>E</kbd>
+                <span class="sc-label">Open Examples Library</span>
+            </div>
+            <div class="sc-item">
+                <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                <span class="sc-label">Save Current Pattern</span>
+            </div>
+            <div class="sc-item">
+                <kbd>Ctrl</kbd> + <kbd>H</kbd>
+                <span class="sc-label">Open Pattern History</span>
+            </div>
+            <div class="sc-item">
+                <kbd>Esc</kbd>
+                <span class="sc-label">Close Any Open Panel</span>
+            </div>
+        </div>
+
+        <div class="tip-box purple">
+            <span class="tip-icon">💻</span>
+            <span>On macOS, use <kbd>⌘ Cmd</kbd> instead of <kbd>Ctrl</kbd></span>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 11: PRO TIPS
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="protips">
+            <div class="section-icon">💎</div>
+            <h2>Pro Tips . Get Maximum Value</h2>
+        </div>
+        <p class="section-subtitle">Five expert workflows that will transform how you work with regular expressions.</p>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🏆</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Workflow 1 . Validate Before You Ship</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Before deploying a regex to production, paste real-world edge cases into the test string. Include empty
+                strings, unicode characters, special symbols, and boundary values. The live highlighting will reveal
+                false positives and missed matches instantly.
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">✨</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Workflow 2 . AI Generate then Refine then Save</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Use AI Generate to get a starting pattern. Test it against your data. Tweak specific parts while
+                watching the explainer to understand what each token does. Once perfected, save the pattern to your
+                history for instant reuse.
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">📚</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Workflow 3 . Learn by Modifying Examples</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Open the Examples Library and load a sample. Study the pattern structure through the explainer. Then
+                start modifying parts of the pattern and observe how the matches change. This builds regex muscle memory
+                significantly faster than reading tutorials.
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">🔁</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Workflow 4 . Batch Test with Replace</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Open Find + Replace to preview how your regex transforms text. This is perfect for log parsing, data
+                cleaning, and code refactoring tasks. See the transformed output live before writing a single line of
+                code in your project.
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="fc-header">
+                <span class="fc-icon">⚡</span>
+                <div class="fc-title-group">
+                    <div class="fc-title">Workflow 5 . Right-Click then Test then Export</div>
+                </div>
+            </div>
+            <div class="fc-desc">
+                Select text from any webpage or documentation. Right-click and test with Regex Tester Pro. Build your
+                pattern with the live preview. Then use Code Export to get copy-ready code in your target language. The
+                entire workflow takes under 30 seconds.
+            </div>
+        </div>
+
+        <div class="tip-box amber">
+            <span class="tip-icon">🔥</span>
+            <span>
+                <strong>Avoid common mistakes</strong><br>
+                Always test with the <code>g</code> flag to see ALL matches, not just the first<br>
+                Use the <code>m</code> flag when testing multiline content like logs or CSV data<br>
+                Remember to escape special characters with a backslash<br>
+                Use the cheat sheet (📋 icon in header) when you forget syntax
+            </span>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 12: SETTINGS
+             ═══════════════════════════════════════════ -->
+        <div class="section-header" id="settings">
+            <div class="section-icon">⚙️</div>
+            <h2>Settings + Customization</h2>
+        </div>
+
+        <div class="grid-2">
+            <div class="feature-card">
+                <div class="fc-header">
+                    <span class="fc-icon">🌓</span>
+                    <div class="fc-title-group">
+                        <div class="fc-title">Theme</div>
+                    </div>
+                </div>
+                <div class="fc-desc">Choose between System, Light, or Dark mode. The System option follows your
+                    operating system preference automatically.</div>
+            </div>
+            <div class="feature-card">
+                <div class="fc-header">
+                    <span class="fc-icon">💾</span>
+                    <div class="fc-title-group">
+                        <div class="fc-title">Auto-Save History</div>
+                    </div>
+                </div>
+                <div class="fc-desc">When enabled, every pattern you test is automatically saved to your history. Toggle
+                    this on or off in the settings panel.</div>
+            </div>
+            <div class="feature-card">
+                <div class="fc-header">
+                    <span class="fc-icon">🚩</span>
+                    <div class="fc-title-group">
+                        <div class="fc-title">Default Flags</div>
+                    </div>
+                </div>
+                <div class="fc-desc">Set your preferred flags so every new session starts with them active. Most
+                    developers prefer <code>g</code> as the default, but you can customize this.</div>
+            </div>
+            <div class="feature-card">
+                <div class="fc-header">
+                    <span class="fc-icon">⭐</span>
+                    <div class="fc-title-group">
+                        <div class="fc-title">Pro License</div>
+                    </div>
+                </div>
+                <div class="fc-desc">Enter your Zovo Pro key in Settings to unlock unlimited AI generations, unlimited
+                    history, and premium features.</div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════════ -->
+        <div class="help-footer">
+            <div class="help-footer-logo">📐</div>
+            <a href="https://zovo.one" target="_blank" rel="noopener noreferrer">
+                Built with love by Zovo
+            </a>
+            <p>Regex Tester Pro . Part of the Zovo Extension Family</p>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -35,6 +35,7 @@
                 "src/onboarding/onboarding.html",
                 "src/onboarding/onboarding.js",
                 "src/guide/guide.html",
+                "src/help/help.html",
                 "src/shared/zovo-brand.css"
             ],
             "matches": [

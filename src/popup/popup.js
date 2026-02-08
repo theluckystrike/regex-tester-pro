@@ -424,6 +424,11 @@
         chrome.tabs.create({ url: chrome.runtime.getURL('src/guide/guide.html') });
     });
 
+    // Help Center button in header
+    document.getElementById('helpBtn').addEventListener('click', () => {
+        chrome.tabs.create({ url: chrome.runtime.getURL('src/help/help.html') });
+    });
+
     themeSetting.addEventListener('change', (e) => {
         settings.theme = e.target.value;
         applyTheme(settings.theme);
