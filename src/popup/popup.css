@@ -1019,3 +1019,221 @@ body {
         transform: scale(1);
     }
 }
+
+/* ═══════════════════════════════════════
+   Performance Safety Badge
+   ═══════════════════════════════════════ */
+.perf-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    transition: all var(--transition);
+}
+
+.perf-badge.safe {
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+}
+
+.perf-badge.info {
+    background: rgba(6, 182, 212, 0.12);
+    color: #06b6d4;
+}
+
+.perf-badge.warning {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+}
+
+.perf-badge.danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    animation: perfPulse 800ms ease infinite;
+}
+
+@keyframes perfPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* ═══════════════════════════════════════
+   Quick Insert Palette
+   ═══════════════════════════════════════ */
+.quick-insert-bar {
+    margin-top: 6px;
+    position: relative;
+}
+
+.qi-toggle {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.qi-toggle:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.qi-palette {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    margin-top: 4px;
+    padding: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.qi-palette[hidden] {
+    display: none;
+}
+
+.qi-group-title {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--primary);
+    margin: 6px 0 3px;
+    padding-left: 2px;
+}
+
+.qi-group-title:first-child {
+    margin-top: 0;
+}
+
+.qi-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.qi-item {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: var(--mono);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 100ms ease;
+}
+
+.qi-item:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+/* ═══════════════════════════════════════
+   Multi-Test Results
+   ═══════════════════════════════════════ */
+.multi-test-results {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mt-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    animation: mtFadeIn 200ms ease;
+}
+
+.mt-row:last-child {
+    border-bottom: none;
+}
+
+.mt-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.mt-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    word-break: break-all;
+    flex: 1;
+}
+
+.mt-row.pass .mt-text {
+    color: var(--text);
+}
+
+.mt-row.fail .mt-text {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.mt-summary {
+    padding: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+}
+
+@keyframes mtFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ═══════════════════════════════════════
+   Button Utilities
+   ═══════════════════════════════════════ */
+.btn-xs {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+    padding: 0;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 12px;
+}
+
+.btn-block {
+    width: 100%;
+}

@@ -41,6 +41,12 @@
             </div>
         </div>
         <div class="error-line" id="errorLine" hidden></div>
+
+        <!-- Quick Insert Palette -->
+        <div class="quick-insert-bar" id="quickInsertBar">
+            <button class="qi-toggle" id="qiToggle" title="Toggle regex building blocks">⚡ Insert</button>
+            <div class="qi-palette" id="qiPalette" hidden></div>
+        </div>
     </section>
 
     <!-- Test String -->
@@ -57,11 +63,21 @@
     <section class="section" id="matchSection">
         <div class="section-label-row">
             <label class="section-label">Matches</label>
+            <span class="perf-badge" id="perfBadge" hidden title="Pattern safety analysis">🟢 Safe</span>
             <span class="match-count" id="matchCount">0 found</span>
         </div>
         <div class="match-results" id="matchResults">
             <div class="empty-state">Enter a pattern and test string to see matches</div>
         </div>
+    </section>
+
+    <!-- Multi-Test Results -->
+    <section class="section" id="multiTestSection" hidden>
+        <div class="section-label-row">
+            <label class="section-label">Multi-String Test</label>
+            <button class="btn-icon btn-xs" id="closeMultiTest" title="Exit multi-test mode">✕</button>
+        </div>
+        <div class="multi-test-results" id="multiTestResults"></div>
     </section>
 
     <!-- Capture Groups -->
@@ -103,6 +119,8 @@
         </button>
         <button class="btn btn-secondary" id="samplesBtn" title="Browse regex examples (Ctrl+E)">📖 Examples</button>
         <button class="btn btn-secondary" id="codeExportBtn" title="Export regex as code">💻 Export</button>
+        <button class="btn btn-secondary" id="multiTestBtn" title="Test multiple strings">🧪 Multi</button>
+        <button class="btn btn-secondary" id="shareBtn" title="Share this pattern">🔗 Share</button>
         <button class="btn btn-secondary" id="savePatternBtn" title="Save pattern (Ctrl+S)">💾 Save</button>
         <button class="btn btn-secondary" id="copyBtn" title="Copy regex (Ctrl+C)">📋 Copy</button>
     </section>
@@ -305,6 +323,8 @@
     <script src="../shared/samples.js"></script>
     <script src="../shared/explainer.js"></script>
     <script src="../shared/code-export.js"></script>
+    <script src="../shared/perf-analyzer.js"></script>
+    <script src="../shared/quick-insert.js"></script>
     <script src="popup.js"></script>
 </body>
 

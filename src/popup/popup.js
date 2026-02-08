@@ -178,6 +178,9 @@
         // Update explainer
         updateExplainer(pattern);
 
+        // Update performance badge
+        updatePerfBadge(pattern, flags, text);
+
         // Highlighted layer
         highlightedLayer.innerHTML = buildHighlightedHTML(text, matches);
 
@@ -831,6 +834,175 @@
     closeCodeExport.addEventListener('click', closeCodeExportPanel);
     codeExportOverlay.addEventListener('click', closeCodeExportPanel);
 
+    // ── Performance Analyzer ──
+    const perfBadge = document.getElementById('perfBadge');
+
+    function updatePerfBadge(pattern, flags, text) {
+        if (typeof PerfAnalyzer === 'undefined' || !pattern) {
+            perfBadge.hidden = true;
+            return;
+        }
+
+        const result = PerfAnalyzer.analyze(pattern);
+        perfBadge.hidden = false;
+        perfBadge.className = 'perf-badge ' + result.score;
+        perfBadge.textContent = result.icon + ' ' + result.label;
+
+        // Build tooltip with issues
+        if (result.issues.length > 0) {
+            perfBadge.title = result.issues.map(i => i.label + ' · ' + i.tip).join('\n');
+        } else {
+            perfBadge.title = 'Pattern is safe for production use';
+        }
+    }
+
+    // ── Quick Insert Palette ──
+    const qiToggle = document.getElementById('qiToggle');
+    const qiPalette = document.getElementById('qiPalette');
+
+    qiToggle.addEventListener('click', () => {
+        const isOpen = !qiPalette.hidden;
+        qiPalette.hidden = isOpen;
+        if (!isOpen && typeof QuickInsert !== 'undefined') {
+            renderQuickInsert();
+        }
+    });
+
+    function renderQuickInsert() {
+        const groups = QuickInsert.getGroups();
+        qiPalette.innerHTML = groups.map(g =>
+            `<div class="qi-group-title">${g.title}</div>
+             <div class="qi-items">
+                ${g.items.map(item =>
+                `<button class="qi-item" data-insert="${escapeHtml(item.insert)}" title="${escapeHtml(item.desc)}">${escapeHtml(item.label)}</button>`
+            ).join('')}
+             </div>`
+        ).join('');
+    }
+
+    qiPalette.addEventListener('click', (e) => {
+        const btn = e.target.closest('.qi-item');
+        if (!btn) return;
+        const insert = btn.dataset.insert;
+        const el = patternInput;
+        const start = el.selectionStart;
+        const end = el.selectionEnd;
+        const before = el.value.slice(0, start);
+        const after = el.value.slice(end);
+        el.value = before + insert + after;
+        el.selectionStart = el.selectionEnd = start + insert.length;
+        el.focus();
+        runEngineDebounced();
+        showToast('Inserted: ' + insert, 'info');
+    });
+
+    // Close palette when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!qiPalette.hidden && !e.target.closest('.quick-insert-bar')) {
+            qiPalette.hidden = true;
+        }
+    });
+
+    // ── Multi-Test Mode ──
+    const multiTestBtn = document.getElementById('multiTestBtn');
+    const multiTestSection = document.getElementById('multiTestSection');
+    const multiTestResults = document.getElementById('multiTestResults');
+    const closeMultiTest = document.getElementById('closeMultiTest');
+    let multiTestActive = false;
+
+    multiTestBtn.addEventListener('click', () => {
+        const pattern = patternInput.value;
+        if (!pattern) {
+            showToast('Enter a pattern first', 'warning');
+            return;
+        }
+
+        const text = testString.value;
+        if (!text) {
+            showToast('Enter test strings (one per line)', 'warning');
+            return;
+        }
+
+        multiTestActive = true;
+        multiTestSection.hidden = false;
+        runMultiTest();
+        Analytics.track('multi_test_opened');
+    });
+
+    closeMultiTest.addEventListener('click', () => {
+        multiTestActive = false;
+        multiTestSection.hidden = true;
+    });
+
+    function runMultiTest() {
+        if (!multiTestActive) return;
+
+        const pattern = patternInput.value;
+        const flags = [...activeFlags].join('').replace('g', '');
+        const lines = testString.value.split('\n').filter(l => l.length > 0);
+
+        if (!pattern || lines.length === 0) {
+            multiTestResults.innerHTML = '<div class="empty-state" style="font-size:11px">Enter test strings (one per line)</div>';
+            return;
+        }
+
+        let regex;
+        try { regex = new RegExp(pattern, flags); } catch { return; }
+
+        let passCount = 0;
+        const rows = lines.map(line => {
+            const match = regex.test(line);
+            if (match) passCount++;
+            return `<div class="mt-row ${match ? 'pass' : 'fail'}">
+                <span class="mt-icon">${match ? '✅' : '❌'}</span>
+                <span class="mt-text">${escapeHtml(line)}</span>
+            </div>`;
+        });
+
+        multiTestResults.innerHTML = rows.join('') +
+            `<div class="mt-summary">
+                <span>✅ ${passCount} passed</span>
+                <span>❌ ${lines.length - passCount} failed</span>
+                <span>${lines.length} total</span>
+            </div>`;
+    }
+
+    // Re-run multi-test on engine update
+    patternInput.addEventListener('input', () => { if (multiTestActive) runMultiTest(); });
+    testString.addEventListener('input', () => { if (multiTestActive) runMultiTest(); });
+
+    // ── Share Pattern ──
+    const shareBtn = document.getElementById('shareBtn');
+
+    shareBtn.addEventListener('click', async () => {
+        const pattern = patternInput.value;
+        if (!pattern) {
+            showToast('Enter a pattern first', 'warning');
+            return;
+        }
+
+        const flags = [...activeFlags].join('');
+        const text = testString.value;
+
+        const snippet = {
+            tool: 'Regex Tester Pro',
+            pattern: pattern,
+            flags: flags,
+            testString: text.slice(0, 500),
+            regex: '/' + pattern + '/' + flags
+        };
+
+        const json = JSON.stringify(snippet, null, 2);
+
+        try {
+            await navigator.clipboard.writeText(json);
+            showToast('Pattern snippet copied!', 'success');
+            Analytics.track('pattern_shared');
+        } catch {
+            showToast('Failed to copy', 'error');
+        }
+    });
+
     // ── Cheat Sheet Panel ──
     const cheatSheetBtn = document.getElementById('cheatSheetBtn');
     const cheatSheetPanel = document.getElementById('cheatSheetPanel');
@@ -858,6 +1030,8 @@
             closeSamplesPanel();
             closeCheatSheetPanel();
             closeCodeExportPanel();
+            qiPalette.hidden = true;
+            if (multiTestActive) { multiTestActive = false; multiTestSection.hidden = true; }
             if (!historyPanel.hidden) { historyPanel.hidden = true; historyOverlay.hidden = true; }
             if (!settingsPanel.hidden) { settingsPanel.hidden = true; settingsOverlay.hidden = true; }
             if (paywallOverlay && !paywallOverlay.hidden) paywallOverlay.hidden = true;
