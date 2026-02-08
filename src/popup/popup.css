@@ -473,7 +473,8 @@ body {
 
 .history-panel,
 .settings-panel,
-.samples-panel {
+.samples-panel,
+.cheatsheet-panel {
     position: fixed;
     top: 0;
     right: 0;
@@ -489,7 +490,8 @@ body {
 
 .history-panel[hidden],
 .settings-panel[hidden],
-.samples-panel[hidden] {
+.samples-panel[hidden],
+.cheatsheet-panel[hidden] {
     display: none;
 }
 
@@ -786,4 +788,50 @@ body {
     padding: 3px 6px;
     border-radius: 3px;
     word-break: break-all;
+}
+
+/* Cheat Sheet Panel */
+.cheatsheet-body {
+    padding: 8px 12px !important;
+}
+
+.cs-group {
+    margin-bottom: 10px;
+}
+
+.cs-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cs-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 2px 0;
+    font-size: 12px;
+}
+
+.cs-row code {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--bg-tertiary);
+    padding: 1px 5px;
+    border-radius: 3px;
+    min-width: 60px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.cs-row span {
+    color: var(--text-muted);
+    font-size: 11px;
 }

@@ -17,6 +17,7 @@
             <span class="pro-badge" id="proBadge" hidden>⭐ Pro</span>
         </div>
         <div class="header-actions">
+            <button class="btn-icon" id="cheatSheetBtn" title="Regex Cheat Sheet">📋</button>
             <button class="btn-icon" id="themeToggle" title="Toggle theme">🌓</button>
             <button class="btn-icon" id="settingsBtn" title="Settings">⚙️</button>
         </div>
@@ -83,13 +84,82 @@
 
     <!-- Action Buttons -->
     <section class="actions">
-        <button class="btn btn-primary" id="aiGenerateBtn">
+        <button class="btn btn-primary" id="aiGenerateBtn" title="Describe a pattern in English (Ctrl+G)">
             🤖 AI Generate <span class="pro-pill" id="aiCounter">3/3</span>
         </button>
-        <button class="btn btn-secondary" id="samplesBtn">📖 Examples</button>
-        <button class="btn btn-secondary" id="savePatternBtn">💾 Save</button>
-        <button class="btn btn-secondary" id="copyBtn">📋 Copy</button>
+        <button class="btn btn-secondary" id="samplesBtn" title="Browse regex examples (Ctrl+E)">📖 Examples</button>
+        <button class="btn btn-secondary" id="savePatternBtn" title="Save pattern (Ctrl+S)">💾 Save</button>
+        <button class="btn btn-secondary" id="copyBtn" title="Copy regex (Ctrl+C)">📋 Copy</button>
     </section>
+
+    <!-- Cheat Sheet Panel (slide-over) -->
+    <div class="panel-overlay" id="cheatSheetOverlay" hidden></div>
+    <aside class="cheatsheet-panel" id="cheatSheetPanel" hidden>
+        <div class="panel-header">
+            <h3>📋 Regex Cheat Sheet</h3>
+            <button class="btn-icon" id="closeCheatSheet">✕</button>
+        </div>
+        <div class="panel-body cheatsheet-body">
+            <div class="cs-group">
+                <div class="cs-title">Characters</div>
+                <div class="cs-row"><code>.</code><span>Any character (except newline)</span></div>
+                <div class="cs-row"><code>\d</code><span>Digit [0-9]</span></div>
+                <div class="cs-row"><code>\D</code><span>Non-digit</span></div>
+                <div class="cs-row"><code>\w</code><span>Word char [A-Za-z0-9_]</span></div>
+                <div class="cs-row"><code>\W</code><span>Non-word char</span></div>
+                <div class="cs-row"><code>\s</code><span>Whitespace</span></div>
+                <div class="cs-row"><code>\S</code><span>Non-whitespace</span></div>
+            </div>
+            <div class="cs-group">
+                <div class="cs-title">Quantifiers</div>
+                <div class="cs-row"><code>*</code><span>0 or more</span></div>
+                <div class="cs-row"><code>+</code><span>1 or more</span></div>
+                <div class="cs-row"><code>?</code><span>0 or 1 (optional)</span></div>
+                <div class="cs-row"><code>{n}</code><span>Exactly n times</span></div>
+                <div class="cs-row"><code>{n,m}</code><span>Between n and m</span></div>
+                <div class="cs-row"><code>*?</code><span>Lazy (non-greedy)</span></div>
+            </div>
+            <div class="cs-group">
+                <div class="cs-title">Anchors & Boundaries</div>
+                <div class="cs-row"><code>^</code><span>Start of string/line</span></div>
+                <div class="cs-row"><code>$</code><span>End of string/line</span></div>
+                <div class="cs-row"><code>\b</code><span>Word boundary</span></div>
+            </div>
+            <div class="cs-group">
+                <div class="cs-title">Groups & Lookaround</div>
+                <div class="cs-row"><code>(abc)</code><span>Capture group</span></div>
+                <div class="cs-row"><code>(?:abc)</code><span>Non-capture group</span></div>
+                <div class="cs-row"><code>(?&lt;name&gt;abc)</code><span>Named group</span></div>
+                <div class="cs-row"><code>(?=abc)</code><span>Positive lookahead</span></div>
+                <div class="cs-row"><code>(?!abc)</code><span>Negative lookahead</span></div>
+                <div class="cs-row"><code>(?&lt;=abc)</code><span>Positive lookbehind</span></div>
+                <div class="cs-row"><code>\1</code><span>Backreference to group 1</span></div>
+            </div>
+            <div class="cs-group">
+                <div class="cs-title">Character Classes</div>
+                <div class="cs-row"><code>[abc]</code><span>Any of a, b, or c</span></div>
+                <div class="cs-row"><code>[^abc]</code><span>Not a, b, or c</span></div>
+                <div class="cs-row"><code>[a-z]</code><span>Range a to z</span></div>
+                <div class="cs-row"><code>[A-Z0-9]</code><span>Combined ranges</span></div>
+            </div>
+            <div class="cs-group">
+                <div class="cs-title">Flags</div>
+                <div class="cs-row"><code>g</code><span>Global — find all matches</span></div>
+                <div class="cs-row"><code>i</code><span>Case-insensitive</span></div>
+                <div class="cs-row"><code>m</code><span>Multiline (^ $ per line)</span></div>
+                <div class="cs-row"><code>s</code><span>Dotall (. matches newline)</span></div>
+                <div class="cs-row"><code>u</code><span>Unicode support</span></div>
+            </div>
+            <div class="cs-group">
+                <div class="cs-title">⌨️ Keyboard Shortcuts</div>
+                <div class="cs-row"><code>Ctrl+E</code><span>Open Examples</span></div>
+                <div class="cs-row"><code>Ctrl+S</code><span>Save Pattern</span></div>
+                <div class="cs-row"><code>Ctrl+H</code><span>Open History</span></div>
+                <div class="cs-row"><code>Esc</code><span>Close any panel</span></div>
+            </div>
+        </div>
+    </aside>
+
 
     <!-- Samples Panel (slide-over) -->
     <div class="panel-overlay" id="samplesOverlay" hidden></div>
@@ -159,8 +229,9 @@
             </div>
             <button class="btn btn-primary btn-sm" id="validateLicenseBtn">Validate</button>
         </div>
-        <div class="panel-footer">
-            <a href="https://zovo.one?ref=regex-tester-pro" target="_blank" class="zovo-link">Zovo</a>
+        <div class="panel-footer" style="gap:8px">
+            <a href="#" id="openGuideLink" class="zovo-link" title="User Guide">📐 Guide</a>
+            <a href="https://zovo.one" target="_blank" class="zovo-link">Zovo</a>
             <span class="version-text" id="versionText">v1.0.0</span>
         </div>
     </aside>

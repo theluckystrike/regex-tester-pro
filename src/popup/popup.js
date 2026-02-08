@@ -412,6 +412,12 @@
     closeSettings.addEventListener('click', closeSettingsPanel);
     settingsOverlay.addEventListener('click', closeSettingsPanel);
 
+    // Guide link in settings panel
+    document.getElementById('openGuideLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        chrome.tabs.create({ url: chrome.runtime.getURL('src/guide/guide.html') });
+    });
+
     themeSetting.addEventListener('change', (e) => {
         settings.theme = e.target.value;
         applyTheme(settings.theme);
@@ -696,7 +702,7 @@
         testString.value = sample.testString;
 
         // If it's a Replace sample, open the replace section
-        if (sample.category === 'Replace') {
+        if (sample.category.includes('Replace')) {
             replaceBody.hidden = false;
             replaceToggle.classList.add('open');
         }
@@ -708,6 +714,86 @@
 
     closeSamples.addEventListener('click', closeSamplesPanel);
     samplesOverlay.addEventListener('click', closeSamplesPanel);
+
+    // ── Cheat Sheet Panel ──
+    const cheatSheetBtn = document.getElementById('cheatSheetBtn');
+    const cheatSheetPanel = document.getElementById('cheatSheetPanel');
+    const cheatSheetOverlay = document.getElementById('cheatSheetOverlay');
+    const closeCheatSheet = document.getElementById('closeCheatSheet');
+
+    cheatSheetBtn.addEventListener('click', () => {
+        cheatSheetPanel.hidden = false;
+        cheatSheetOverlay.hidden = false;
+        Analytics.track('cheatsheet_opened');
+    });
+
+    function closeCheatSheetPanel() {
+        cheatSheetPanel.hidden = true;
+        cheatSheetOverlay.hidden = true;
+    }
+
+    closeCheatSheet.addEventListener('click', closeCheatSheetPanel);
+    cheatSheetOverlay.addEventListener('click', closeCheatSheetPanel);
+
+    // ── Keyboard Shortcuts ──
+    document.addEventListener('keydown', (e) => {
+        // Esc — close any open panel
+        if (e.key === 'Escape') {
+            closeSamplesPanel();
+            closeCheatSheetPanel();
+            if (!historyPanel.hidden) { historyPanel.hidden = true; historyOverlay.hidden = true; }
+            if (!settingsPanel.hidden) { settingsPanel.hidden = true; settingsOverlay.hidden = true; }
+            if (paywallOverlay && !paywallOverlay.hidden) paywallOverlay.hidden = true;
+            return;
+        }
+
+        // Only handle Ctrl/Cmd shortcuts when not typing in an input
+        const mod = e.ctrlKey || e.metaKey;
+        if (!mod) return;
+
+        switch (e.key.toLowerCase()) {
+            case 'e':
+                e.preventDefault();
+                openSamplesPanel();
+                break;
+            case 's':
+                e.preventDefault();
+                savePatternBtn.click();
+                break;
+            case 'h':
+                e.preventDefault();
+                document.getElementById('historyBtn')?.click();
+                break;
+        }
+    });
+
+    // ── First-Run Demo ──
+    // On first popup open, auto-load an email regex sample so the UI isn't empty
+    (async function firstRunDemo() {
+        try {
+            const { firstRunDone } = await chrome.storage.local.get('firstRunDone');
+            if (firstRunDone) return;
+            if (typeof RegexSamples === 'undefined') return;
+
+            // Wait a tick for init to finish
+            await new Promise(r => setTimeout(r, 100));
+
+            // Only load if user hasn't typed anything yet
+            if (patternInput.value || testString.value) return;
+
+            // Load the "Email Address" sample from Validation category
+            const validationSamples = RegexSamples.getAll().filter(s => s.name === 'Email Address');
+            const sample = validationSamples[0] || RegexSamples.getAll()[0];
+            if (sample) {
+                patternInput.value = sample.pattern;
+                activeFlags = new Set(sample.flags.split(''));
+                updateFlagButtons();
+                testString.value = sample.testString;
+                runEngine();
+            }
+            await chrome.storage.local.set({ firstRunDone: true });
+        } catch (e) { /* non-critical */ }
+    })();
 
     // ── Helpers ──
     function escapeHtml(str) {
