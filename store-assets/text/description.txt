@@ -1,82 +1,125 @@
-Tired of switching between regex101 and your editor?
+Regex Tester Pro by Zovo is the fastest regex tool for Chrome. Test, debug, and generate regular expressions right from your toolbar — no tabs, no switching, no delays.
 
-Regex Tester Pro puts a powerful regex engine right in your browser toolbar — test, debug, and master regular expressions without leaving Chrome.
+Whether you need to validate an email regex, parse log files, clean up data, or write a URL matcher — Regex Tester Pro handles it all with real-time highlighting, AI generation, and one-click code export in 8 programming languages.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ WHY 10,000+ DEVELOPERS CHOOSE REGEX TESTER PRO
 
-WHY REGEX TESTER PRO?
-
-Unlike web-based regex tools, Regex Tester Pro:
-• Lives in your toolbar — one click to open, test, and go
-• Works completely offline — no server, no latency
-• Saves your pattern history locally for instant recall
+Unlike web-based regex tools that require a browser tab and an internet connection, Regex Tester Pro works entirely offline, lives in your toolbar, and loads in under 100ms. It is the fastest way to go from "I need a regex" to "I have working code."
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-FEATURES
+✨ CORE FEATURES
 
 ✦ Real-Time Match Highlighting
-   See matches light up as you type. No submit button, no delay — just instant visual feedback on every keystroke.
+See every match highlighted as you type. No submit buttons. No loading spinners. Just instant visual feedback on every keystroke. Matches are color-coded and numbered.
+
+✦ AI Regex Generator (Powered by AI)
+Describe what you want to match in plain English and get a working regex pattern instantly. Skip the documentation, skip the guesswork. Free tier includes 3 AI generations per day.
+
+✦ Code Export in 8 Languages
+Export your regex as ready-to-use code in JavaScript, Python, Java, PHP, Go, Ruby, C#, or Rust. One click to copy production-ready code with proper flag translation for each language.
+
+✦ Pattern Explainer (Regex Breakdown)
+Get a token-by-token plain-English explanation of any regex pattern. Understand exactly what each part does. Great for learning regex, reviewing code, or debugging complex patterns.
+
+✦ ReDoS Performance Analyzer
+Detect dangerous patterns that could crash your application. The built-in safety analyzer warns about catastrophic backtracking, nested quantifiers, and other ReDoS vulnerabilities before they ever reach production.
+
+✦ Multi-String Test Mode
+Test your regex against multiple strings at once. Each line becomes a separate test case with a pass/fail indicator. Perfect for validating form rules, testing edge cases, and building regex confidence.
+
+✦ Quick Insert Palette
+Build regex patterns faster with click-to-insert building blocks. 6 categories of common tokens, quantifiers, anchors, groups, lookaround, and ready-made patterns. Great for beginners and productivity for experts.
+
+✦ 40+ Regex Examples Library
+Browse 40+ curated regex patterns across 8 categories. Find ready-made patterns for emails, URLs, phone numbers, dates, IPs, HTML tags, passwords, credit cards, and more. One click to load any example.
 
 ✦ Capture Group Viewer
-   Named and numbered groups displayed clearly. Debug complex patterns with full group extraction.
+Named and numbered groups displayed clearly with full extraction. Debug complex patterns with nested groups and see exactly what each group captures.
 
-✦ AI Regex Generation
-   Describe what you want to match in plain English. Get a working regex instantly. Free tier includes 3 generations per day.
+✦ Find and Replace
+Test string replacements with regex backreferences, named groups, and special replacement tokens. See the transformed output before committing to your codebase.
 
-✦ Find & Replace
-   Test replacements with regex backreferences. See the transformed output before you commit to your code.
+✦ Regex Cheat Sheet
+A built-in quick reference panel with every regex syntax element organized by category. Characters, quantifiers, anchors, groups, lookaround, character classes, and flags — all one click away.
 
-✦ One-Click Flag Toggles
-   Toggle g, i, m, s, u, y flags with a single click. No more typing flag strings.
+✦ Share Pattern
+Copy a structured JSON snippet of your pattern, flags, and test string. Share regex patterns with teammates via Slack, Discord, email, or documentation.
 
-✦ Pattern History
-   Save and recall your regex patterns. Never retype that complex email validation again.
+✦ Right-Click Context Menu
+Select text on any web page, right-click, and test regex on it instantly. No copy-pasting needed. Test patterns against real-world content as you browse.
 
-✦ Right-Click Testing
-   Select text on any page, right-click, and test regex on it instantly via context menu.
+✦ Pattern History and Save
+Save your favorite patterns and access full history. Never lose or retype a complex regex. Unlimited local storage with instant search.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✦ Keyboard Shortcuts
+Power-user shortcuts for every action. Ctrl+E for examples, Ctrl+S to save, Ctrl+H for history, Escape to close any panel.
 
-PERFECT FOR
-
-→ Web developers debugging form validation
-→ Data engineers cleaning up text patterns
-→ QA engineers writing test assertions
-→ Students learning regular expressions
+✦ Dark Mode and Light Mode
+Beautiful dark and light themes that follow your system preference, or set manually. Premium design that looks great on any display.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-HOW IT WORKS
+🎯 PERFECT FOR
 
-1. Click the Regex Tester Pro icon in your toolbar
-2. Type your pattern and test string
-3. See matches highlighted in real-time
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PRIVACY & TRUST
-
-✓ No data collection
-✓ No tracking or analytics
-✓ Works 100% offline
-✓ Open source: github.com/theluckystrike/regex-tester-pro
+→ Frontend developers debugging form validation and input patterns
+→ Backend developers writing API request parsers and validators  
+→ Data engineers cleaning text, parsing logs, and extracting fields
+→ QA engineers writing test assertions and test case validation
+→ DevOps engineers parsing log files, server output, and configs
+→ Students and beginners learning regular expressions step by step
+→ Technical writers validating content patterns and formatting rules
+→ Security researchers analyzing patterns and detecting vulnerabilities
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-PERMISSIONS EXPLAINED
+🚀 HOW IT WORKS
 
-Storage: Saves your settings and pattern history locally on your device
-Active Tab: Enables the right-click context menu to test regex on selected text
-Context Menus: Adds "Test regex on selection" to your right-click menu
-Alarms: Refreshes your Pro license status daily (if applicable)
+1. Click the Regex Tester Pro icon in your toolbar (or pin it for instant access)
+2. Type your regex pattern or describe what you need in plain English
+3. Paste your test string (or right-click any text on a web page to test it)
+4. See matches highlighted in real-time with capture groups extracted
+5. Export as code, share with teammates, or save for later
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-BUILT BY ZOVO
+🔒 PRIVACY AND SECURITY
 
-Part of the Zovo extension family — premium tools for developers and power users.
+✓ Zero data collection — nothing leaves your browser
+✓ No tracking, no analytics, no telemetry
+✓ Works 100% offline — no internet required
+✓ All patterns stored locally on your device only
+✓ Open-source on GitHub
+✓ Manifest V3 compliant with strict Content Security Policy
+✓ No remote code execution
 
-Website: https://zovo.one
-Support: support@zovo.one
-Feedback: We read every message
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔑 PERMISSIONS EXPLAINED
+
+Storage → Saves your settings, pattern history, and saved patterns locally on your device
+Active Tab → Enables right-click context menu to test regex on selected text from any page
+Context Menus → Adds "Test with Regex Tester Pro" to your right-click menu
+Alarms → Refreshes your Pro license status periodically (optional, only if you upgrade)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⭐ PRO UPGRADE (OPTIONAL)
+
+Unlock unlimited AI regex generations, unlimited pattern history, priority support, and advanced features with a Pro license from zovo.one
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🏗️ BUILT BY ZOVO
+
+Part of the Zovo developer tools family — premium Chrome extensions for developers and power users.
+
+Website → https://zovo.one
+Support → support@zovo.one
+GitHub → https://github.com/theluckystrike/regex-tester-pro
+
+We read every message and ship updates weekly. Your feedback makes Regex Tester Pro better for everyone.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SEARCH TAGS . regex tester, regular expression, regexp, regex debugger, regex builder, regex generator, regex validator, pattern matching, regex checker, regex editor, string matching, text pattern, regex helper, regex tool, regex online, regex chrome extension, regex101, regexr, regex validator chrome, regex playground, developer tools, web developer tools, javascript regex, python regex, form validation regex, email regex, URL regex, regex cheat sheet, regex reference, code generator, AI regex

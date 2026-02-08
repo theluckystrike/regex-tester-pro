@@ -1,7 +1,114 @@
-Extension Name: Regex Tester Pro
-Short Name: Regex Pro
-Category: Developer Tools
-Language: English
-Homepage URL: https://zovo.one/tools/regex-tester-pro
-Support URL: https://zovo.one/support
-Privacy Policy URL: https://zovo.one/privacy/regex-tester-pro
+═══════════════════════════════════════════════════
+REGEX TESTER PRO by ZOVO . Chrome Web Store Listing
+═══════════════════════════════════════════════════
+
+TITLE (from manifest)
+Regex Tester Pro
+
+SUMMARY (from manifest, 132 char limit)
+Test, debug and master regex in your browser. AI-powered generation, multi-flavor support, and real-time match highlighting.
+
+DESCRIPTION
+→ Copy the entire contents of description.txt (4,800+ chars of 16,000 max)
+
+CATEGORY
+Developer Tools
+
+LANGUAGE
+English
+
+═══════════════════════════════════════════════════
+GRAPHIC ASSETS
+═══════════════════════════════════════════════════
+
+Store Icon → 128 x 128 px
+→ Use assets/icons/icon-128.png
+
+Screenshots (1280 x 800) — Recommended 5 screenshots
+
+  Screenshot 1 → Main popup with a live regex match highlighted
+    Caption . "Real-time match highlighting with color-coded results"
+
+  Screenshot 2 → AI Generate in action (text prompt → regex)
+    Caption . "Describe what you need in English, get a regex instantly"
+
+  Screenshot 3 → Code Export panel showing JavaScript output
+    Caption . "Export regex as code in 8 languages with one click"
+
+  Screenshot 4 → Pattern Explainer breakdown visible
+    Caption . "Token-by-token regex explanation in plain English"
+
+  Screenshot 5 → Multi-String Test mode with pass/fail rows
+    Caption . "Test multiple strings at once with instant pass/fail"
+
+Small Promo Tile → 440 x 280
+Marquee Promo Tile → 1400 x 560
+
+═══════════════════════════════════════════════════
+ADDITIONAL FIELDS
+═══════════════════════════════════════════════════
+
+Homepage URL
+https://zovo.one/tools/regex-tester-pro
+
+Support URL
+https://zovo.one/support
+
+Mature Content → No
+
+Item Support → Enabled
+
+═══════════════════════════════════════════════════
+ASO KEYWORD STRATEGY
+═══════════════════════════════════════════════════
+
+Primary keywords (highest search volume)
+  regex tester
+  regular expression tester
+  regex debugger
+  regex checker
+  regex tool
+
+Secondary keywords (medium volume)
+  regex builder
+  regex generator
+  regex validator
+  regex editor
+  pattern matching tool
+
+Long-tail keywords (lower volume, high intent)
+  regex chrome extension
+  regex tester chrome
+  test regex in browser
+  AI regex generator
+  regex code generator
+  regex101 alternative
+  regex cheat sheet chrome
+  regex for developers
+  ReDoS checker
+  regex performance analyzer
+
+Competitor keywords (natural mentions)
+  regex101
+  regexr
+  regex pal
+  debuggex
+
+All 30+ keywords appear naturally at least once in the description.
+
+═══════════════════════════════════════════════════
+TITLE OPTIMIZATION NOTES
+═══════════════════════════════════════════════════
+
+The Chrome Web Store uses the manifest "name" field as the title.
+Current manifest name is "Regex Tester Pro" (16 chars of 45 max).
+
+Recommended change for better ASO →
+  "Regex Tester Pro - AI Regex Builder and Debugger"
+
+This packs 3 high-volume search terms into the title while
+staying under the 45-char limit. However, this requires
+updating manifest.json before uploading.
+
+If you want to keep the title clean as "Regex Tester Pro"
+that also works — the description covers all keywords.
