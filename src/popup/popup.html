@@ -69,6 +69,19 @@
         <div class="group-results" id="groupResults"></div>
     </section>
 
+    <!-- Pattern Explainer -->
+    <section class="section collapse" id="explainerSection">
+        <button class="section-toggle" id="explainerToggle">
+            <span>🧠 Pattern Explanation</span>
+            <span class="toggle-arrow">▸</span>
+        </button>
+        <div class="collapse-body" id="explainerBody" hidden>
+            <div class="explainer-list" id="explainerList">
+                <div class="empty-state" style="font-size:11px">Type a pattern to see a breakdown</div>
+            </div>
+        </div>
+    </section>
+
     <!-- Find & Replace -->
     <section class="section collapse" id="replaceSection">
         <button class="section-toggle" id="replaceToggle">
@@ -88,9 +101,24 @@
             🤖 AI Generate <span class="pro-pill" id="aiCounter">3/3</span>
         </button>
         <button class="btn btn-secondary" id="samplesBtn" title="Browse regex examples (Ctrl+E)">📖 Examples</button>
+        <button class="btn btn-secondary" id="codeExportBtn" title="Export regex as code">💻 Export</button>
         <button class="btn btn-secondary" id="savePatternBtn" title="Save pattern (Ctrl+S)">💾 Save</button>
         <button class="btn btn-secondary" id="copyBtn" title="Copy regex (Ctrl+C)">📋 Copy</button>
     </section>
+
+    <!-- Code Export Panel (slide-over) -->
+    <div class="panel-overlay" id="codeExportOverlay" hidden></div>
+    <aside class="codeexport-panel" id="codeExportPanel" hidden>
+        <div class="panel-header">
+            <h3>💻 Code Export</h3>
+            <button class="btn-icon" id="closeCodeExport">✕</button>
+        </div>
+        <div class="code-lang-tabs" id="codeLangTabs"></div>
+        <div class="panel-body">
+            <pre class="code-export-output" id="codeExportOutput"></pre>
+            <button class="btn btn-primary btn-sm btn-block" id="copyCodeBtn">📋 Copy Code</button>
+        </div>
+    </aside>
 
     <!-- Cheat Sheet Panel (slide-over) -->
     <div class="panel-overlay" id="cheatSheetOverlay" hidden></div>
@@ -261,6 +289,9 @@
         <a href="https://zovo.one?ref=regex-tester-pro&source=footer" target="_blank" class="zovo-footer">Zovo</a>
     </footer>
 
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script src="../shared/error-handler.js"></script>
     <script src="../shared/storage.js"></script>
     <script src="../shared/payments.js"></script>
@@ -271,6 +302,8 @@
     <script src="../shared/security.js"></script>
     <script src="../shared/upgrade-prompts.js"></script>
     <script src="../shared/samples.js"></script>
+    <script src="../shared/explainer.js"></script>
+    <script src="../shared/code-export.js"></script>
     <script src="popup.js"></script>
 </body>
 

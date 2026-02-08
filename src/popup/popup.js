@@ -169,8 +169,14 @@
             }
         }
 
-        // Match count
+        // Match count with pulse animation
         matchCount.textContent = matches.length + ' found';
+        matchCount.classList.remove('pulse');
+        void matchCount.offsetWidth; // trigger reflow
+        if (matches.length > 0) matchCount.classList.add('pulse');
+
+        // Update explainer
+        updateExplainer(pattern);
 
         // Highlighted layer
         highlightedLayer.innerHTML = buildHighlightedHTML(text, matches);
@@ -715,6 +721,111 @@
     closeSamples.addEventListener('click', closeSamplesPanel);
     samplesOverlay.addEventListener('click', closeSamplesPanel);
 
+    // ── Toast Notification System ──
+    const toastContainer = document.getElementById('toastContainer');
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => toast.remove(), 2600);
+    }
+
+    // ── Pattern Explainer ──
+    const explainerToggle = document.getElementById('explainerToggle');
+    const explainerBody = document.getElementById('explainerBody');
+    const explainerList = document.getElementById('explainerList');
+
+    explainerToggle.addEventListener('click', () => {
+        const isOpen = !explainerBody.hidden;
+        explainerBody.hidden = isOpen;
+        explainerToggle.classList.toggle('open', !isOpen);
+        if (!isOpen) updateExplainer(patternInput.value);
+    });
+
+    function updateExplainer(pattern) {
+        if (explainerBody.hidden) return;
+        if (typeof RegexExplainer === 'undefined') return;
+
+        if (!pattern) {
+            explainerList.innerHTML = '<div class="empty-state" style="font-size:11px">Type a pattern to see a breakdown</div>';
+            return;
+        }
+
+        const tokens = RegexExplainer.explain(pattern);
+        explainerList.innerHTML = tokens.map(t =>
+            `<div class="explainer-row">
+                <span class="explainer-token">${escapeHtml(t.token)}</span>
+                <span class="explainer-desc">${escapeHtml(t.description.replace(t.token + ' — ', ''))}</span>
+            </div>`
+        ).join('');
+    }
+
+    // ── Code Export Panel ──
+    const codeExportBtn = document.getElementById('codeExportBtn');
+    const codeExportPanel = document.getElementById('codeExportPanel');
+    const codeExportOverlay = document.getElementById('codeExportOverlay');
+    const closeCodeExport = document.getElementById('closeCodeExport');
+    const codeLangTabs = document.getElementById('codeLangTabs');
+    const codeExportOutput = document.getElementById('codeExportOutput');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    let activeCodeLang = 'javascript';
+
+    codeExportBtn.addEventListener('click', () => {
+        if (!patternInput.value) {
+            showToast('Enter a pattern first', 'warning');
+            return;
+        }
+        openCodeExportPanel();
+        Analytics.track('code_export_opened');
+    });
+
+    function openCodeExportPanel() {
+        if (typeof CodeExport === 'undefined') return;
+        const langs = CodeExport.getLanguages();
+
+        codeLangTabs.innerHTML = langs.map(l =>
+            `<button class="code-lang-btn${l.id === activeCodeLang ? ' active' : ''}" data-lang="${l.id}">${l.icon} ${l.name}</button>`
+        ).join('');
+
+        renderCodeExport(activeCodeLang);
+        codeExportPanel.hidden = false;
+        codeExportOverlay.hidden = false;
+    }
+
+    function closeCodeExportPanel() {
+        codeExportPanel.hidden = true;
+        codeExportOverlay.hidden = true;
+    }
+
+    function renderCodeExport(lang) {
+        const pattern = patternInput.value;
+        const flags = [...activeFlags].join('');
+        codeExportOutput.textContent = CodeExport.generate(pattern, flags, lang);
+    }
+
+    codeLangTabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.code-lang-btn');
+        if (!btn) return;
+        activeCodeLang = btn.dataset.lang;
+        codeLangTabs.querySelectorAll('.code-lang-btn').forEach(b =>
+            b.classList.toggle('active', b.dataset.lang === activeCodeLang)
+        );
+        renderCodeExport(activeCodeLang);
+    });
+
+    copyCodeBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(codeExportOutput.textContent);
+            showToast('Code copied to clipboard!', 'success');
+        } catch {
+            showToast('Failed to copy', 'error');
+        }
+    });
+
+    closeCodeExport.addEventListener('click', closeCodeExportPanel);
+    codeExportOverlay.addEventListener('click', closeCodeExportPanel);
+
     // ── Cheat Sheet Panel ──
     const cheatSheetBtn = document.getElementById('cheatSheetBtn');
     const cheatSheetPanel = document.getElementById('cheatSheetPanel');
@@ -741,6 +852,7 @@
         if (e.key === 'Escape') {
             closeSamplesPanel();
             closeCheatSheetPanel();
+            closeCodeExportPanel();
             if (!historyPanel.hidden) { historyPanel.hidden = true; historyOverlay.hidden = true; }
             if (!settingsPanel.hidden) { settingsPanel.hidden = true; settingsOverlay.hidden = true; }
             if (paywallOverlay && !paywallOverlay.hidden) paywallOverlay.hidden = true;
