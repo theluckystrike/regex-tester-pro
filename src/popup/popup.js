@@ -1053,7 +1053,7 @@
                 break;
             case 'h':
                 e.preventDefault();
-                document.getElementById('historyBtn')?.click();
+                openHistoryPanel();
                 break;
         }
     });
